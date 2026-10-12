@@ -47,7 +47,7 @@
 </div>
 <section id="result" aria-live="polite"><h2>治療方案</h2><p class="muted">請完成資料輸入，再點選「分析並產生建議」。</p></section>
 <section class="input-area"><span class="step">STEP 4</span><h2>疼痛複評與處置摘要</h2>
-<div class="grid"><label class="field">複評 NRS<input type="number" id="repeat" min="0" max="10" placeholder="0–10"></label><label class="field">處置備註<textarea id="notes" rows="2" placeholder="藥物、劑量、時間、生命徵象、是否不良反應"></textarea></label></div>
+<div class="grid"><label class="field">複評 NRS<select id="repeat" aria-label="複評 NRS"><option value="">請選擇複評疼痛程度</option><option value="0">0 分｜無痛</option><option value="1">1 分｜輕度疼痛</option><option value="2">2 分｜輕度疼痛</option><option value="3">3 分｜輕度疼痛</option><option value="4">4 分｜中度疼痛</option><option value="5">5 分｜中度疼痛</option><option value="6">6 分｜中度疼痛</option><option value="7">7 分｜重度疼痛</option><option value="8">8 分｜重度疼痛</option><option value="9">9 分｜重度疼痛</option><option value="10">10 分｜重度疼痛</option></select></label><label class="field">處置備註<textarea id="notes" rows="2" placeholder="藥物、劑量、時間、生命徵象、是否不良反應"></textarea></label></div>
 <button id="copy">複製治療摘要</button><button class="secondary" onclick="window.print()">列印</button>
 <div id="followup" class="note">未輸入複評疼痛分數。</div></section>
 <section><h2>文獻與使用原則</h2><p>本系統使用 EUSEM 2025 的初始評估、疼痛分層、CERTA 多模式止痛與複評原則；參考 ACEP 2020 非 opioid 優先與 NICE NG39 重大創傷止痛建議。藥物具各國核准差異，選用須符合當地仿單與院內規範。</p>
