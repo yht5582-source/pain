@@ -74,7 +74,7 @@
 <div id="followup" class="note">請先產生建議並輸入複評分數。</div></section>
 <section><h2>文獻與使用原則</h2><p>本系統使用 EUSEM 2025 的初始評估、疼痛分層（Figure 8.2）、成人／兒童治療選項（Figure 8.3a/b）、特殊族群（第 7 章：腎病、肝病、妊娠、高齡）與複評原則（Figure 8.1）；重大創傷參考 NICE NG39 1.7.4–1.7.6，opioid 使用原則參考 ACEP 2020。藥物具各國核准差異（例如 methoxyflurane、metamizole、SL sufentanil 在台灣未必可取得），選用須符合當地仿單與院內規範。</p>
 <p><a href="https://eusem.org/images/251210_EUSEM_European_Pain_Initiative_Guidelines_Updated_Oct_2025.pdf" target="_blank" rel="noopener">EUSEM 2025 原始手冊</a> · <a href="https://www.acep.org/siteassets/new-pdfs/clinical-policies/opioids-2020.pdf" target="_blank" rel="noopener">ACEP Opioid Policy</a> · <a href="https://www.nice.org.uk/guidance/ng39/chapter/Recommendations" target="_blank" rel="noopener">NICE NG39</a> · <a href="https://www.kidney.org/kidney-topics/pain-medicines-and-kidney-disease" target="_blank" rel="noopener">NKF Kidney Safety</a> · <a href="https://yht5582-source.github.io/Migraine--Headache/" target="_blank" rel="noopener">偏頭痛／頭痛專頁</a></p></section>
-<footer>Version 1.1 | 2026-10-12 | Clinical decision support only. 成人劑量僅列 EUSEM 2025 第 8 章原文起始劑量供核對；未包含處方自動簽署、兒童體重劑量或完整藥物交互作用資料庫。</footer>
+<footer>Version 1.1 | 2026-10-12 | Clinical decision support only. 成人劑量僅列 EUSEM 2025 第 8 章原文起始劑量供核對；體重 <50 kg 的 paracetamol 依台灣仿單；未包含處方自動簽署、兒童體重劑量或完整藥物交互作用資料庫。</footer>
 </main>
 <script>
 /*ENGINE-START*/
@@ -90,17 +90,25 @@ var PAIN = (function () {
   function r1(x) { return Math.round(x * 10) / 10; }
 
   function paracetamol(s, f) {
-    // EUSEM ch.8: adults 1 g q4h, max 4 g/24 h, ≤3 days; ch.7: liver disease ≤2 g/day.
-    // Weight <50 kg / hepatotoxicity risk: IV paracetamol SmPC 15 mg/kg, ≤60 mg/kg/day (≤3 g); risk factors ≤3 g.
-    var wt = s.weight;
-    if (f.liver) return { dose: '每次 ≤1 g（分次）', maxG: 2, why: '嚴重肝病：每日總量 ≤2 g（EUSEM 第 7 章）' };
-    if (isNum(wt) && wt < 50) {
-      var per = Math.round(wt * 15), max = r1(Math.min(wt * 60 / 1000, 3));
-      return { dose: '15 mg/kg ≈ ' + per + ' mg／次', maxG: max, why: '體重 <50 kg：依體重計算，每日 ≤60 mg/kg 且 ≤3 g（IV paracetamol 仿單）' };
+    // Adults ≥50 kg: EUSEM ch.8 — 1 g q4h, max 4 g/24 h, ≤3 days.
+    // <50 kg: Taiwan label — 15 mg/kg q6h or 12.5 mg/kg q4h, single dose ≤15 mg/kg (≤750 mg), ≥4 h apart, ≤75 mg/kg/24 h.
+    // Caps applied on top: dehydration ≤3 g (EU IV paracetamol SmPC); severe liver disease ≤2 g (EUSEM ch.7).
+    var wt = s.weight, low = isNum(wt) && wt < 50, dose, maxG, why = [];
+    if (low) {
+      var p15 = Math.min(Math.round(wt * 15), 750), p125 = Math.min(Math.round(wt * 12.5), 750);
+      dose = '15 mg/kg ≈ ' + p15 + ' mg q6h，或 12.5 mg/kg ≈ ' + p125 + ' mg q4h（單次 ≤750 mg）';
+      maxG = r1(wt * 75 / 1000);
+      why.push('體重 <50 kg：每日 ≤75 mg/kg，間隔 ≥4 小時（台灣仿單）');
+    } else {
+      dose = '1 g／次，間隔 ≥4 小時';
+      maxG = 4;
+      why.push(isNum(wt) ? '一般成人：每日 ≤4 g，連續 ≤3 天（EUSEM 第 8 章）' : '體重未填：若 <50 kg 需改依體重計算');
     }
-    if (f.dehydrated) return { dose: '1 g／次，間隔 ≥4 小時', maxG: 3, why: '脫水為肝毒性風險因子：每日 ≤3 g（IV paracetamol 仿單）' };
-    if (!isNum(wt)) return { dose: '1 g／次，間隔 ≥4 小時', maxG: 4, why: '體重未填：若體重 <50 kg 需改用 15 mg/kg 計算', needWeight: true };
-    return { dose: '1 g／次，間隔 ≥4 小時', maxG: 4, why: '一般成人：每日 ≤4 g，連續 ≤3 天（EUSEM 第 8 章）' };
+    if (f.dehydrated && maxG > 3) { maxG = 3; why.push('脫水為肝毒性風險因子：每日 ≤3 g（歐洲 IV paracetamol 仿單）'); }
+    if (f.liver && maxG > 2) { maxG = 2; why.push('嚴重肝病：每日 ≤2 g（EUSEM 第 7 章）'); }
+    if (f.liver && !low) dose = '每次 ≤1 g（分次）';
+    why.push('總量須加總所有途徑及含 acetaminophen 的複方');
+    return { dose: dose, maxG: maxG, why: why.join('；'), needWeight: !isNum(wt) };
   }
 
   function evaluate(s) {
@@ -285,7 +293,7 @@ const cases = {
 const explain = {
  fracture:'教學觀察：NRS 8 屬重度，結果會列出「先 ketamine 再滴定 opioid」、IV morphine 首選與神經阻斷；腎功能及出血風險未見預設禁忌，但仍需核對過敏與用藥。',
  dialysis:'教學觀察：透析使 NSAIDs、morphine、codeine 被列入避免，opioid 改以 fentanyl 為主並優先考慮髂筋膜阻斷。透析患者不能憑 eGFR 5 判斷透析充分性。',
- elder:'教學觀察：NRS 6 屬中度；近期上消化道出血使全身性 NSAIDs 被列入避免。48 kg 使 paracetamol 改以 15 mg/kg（約 720 mg／次）計算，每日上限約 2.9 g。'
+ elder:'教學觀察：NRS 6 屬中度；近期上消化道出血使全身性 NSAIDs 被列入避免。48 kg 使 paracetamol 改依體重計算（15 mg/kg ≈ 720 mg q6h），每日上限 75 mg/kg ≈ 3.6 g，並須加總複方。'
 };
 function loadCase(key){
  const c = cases[key]; if(!c) return;

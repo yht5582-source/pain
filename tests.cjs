@@ -70,7 +70,12 @@ t('codeine/tramadol listed as not recommended for adults', () => assert.ok(/Code
 
 console.log('Paracetamol limits');
 t('70 kg → 4 g', () => assert.equal(ev().para.maxG, 4));
-t('48 kg → 15 mg/kg (720 mg), max 2.9 g', () => { const p = ev({ weight: 48 }).para; assert.ok(/720 mg/.test(p.dose)); assert.equal(p.maxG, 2.9); });
+t('48 kg → Taiwan label: 15 mg/kg 720 mg q6h / 12.5 mg/kg 600 mg q4h, max 75 mg/kg = 3.6 g', () => { const p = ev({ weight: 48 }).para; assert.ok(/720 mg q6h/.test(p.dose) && /600 mg q4h/.test(p.dose)); assert.equal(p.maxG, 3.6); });
+t('single dose capped at 750 mg (49.9 kg)', () => assert.ok(/≈ 749 mg q6h/.test(ev({ weight: 49.9 }).para.dose)));
+t('40 kg → 3 g/day', () => assert.equal(ev({ weight: 40 }).para.maxG, 3));
+t('40 kg + liver → keeps weight-based dose, cap 2 g', () => { const p = ev({ weight: 40, flags: { liver: true } }).para; assert.ok(/600 mg q6h/.test(p.dose)); assert.equal(p.maxG, 2); });
+t('48 kg + dehydrated → 3 g', () => assert.equal(ev({ weight: 48, flags: { dehydrated: true } }).para.maxG, 3));
+t('combination products reminder', () => assert.ok(/複方/.test(ev().para.why)));
 t('liver → 2 g', () => assert.equal(ev({ flags: { liver: true } }).para.maxG, 2));
 t('dehydrated → 3 g', () => assert.equal(ev({ flags: { dehydrated: true } }).para.maxG, 3));
 t('weight unknown → warn to confirm ≥50 kg', () => assert.ok(/未填體重/.test(all(ev({ weight: null })))));
@@ -99,7 +104,7 @@ t('Case B (dialysis hip fracture) matches teaching text', () => {
 });
 t('Case C (83 y, 48 kg, GI bleed) matches teaching text', () => {
   const r = ev({ age: 83, weight: 48, egfr: 38, nrs: 6, cause: 'muscle', flags: { bleed: true } });
-  assert.equal(r.sev, 'moderate'); assert.equal(r.nsaid, 'avoid'); assert.equal(r.para.maxG, 2.9);
+  assert.equal(r.sev, 'moderate'); assert.equal(r.nsaid, 'avoid'); assert.equal(r.para.maxG, 3.6);
 });
 
 console.log(`\n${pass} passed, ${fail} failed`);
