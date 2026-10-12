@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>急診急性疼痛臨床決策導航 | EUSEM 2025</title>
+<style>
+:root{font-family:system-ui,"Noto Sans TC",sans-serif;color:#17263b;background:#f2f6fb}*{box-sizing:border-box}body{margin:0}header{background:#183252;color:white;padding:25px max(20px,calc((100% - 1000px)/2))}header h1{margin:0 0 10px;font-size:27px}header p{margin:0;color:#cfe1ee}main{max-width:1000px;margin:auto;padding:22px}section,.panel{background:white;border:1px solid #dce5ee;border-radius:14px;padding:22px;margin-bottom:16px;box-shadow:0 2px 8px #1b35540a}h2{font-size:20px;margin:0 0 14px}h3{font-size:16px;margin-bottom:8px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:12px}.field{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:14px}input,select,textarea{width:100%;border:1px solid #b8c9d8;border-radius:8px;padding:10px;font:inherit;background:white;color:#17263b}input[type=checkbox]{width:auto;margin-right:8px}.checks{display:grid;grid-template-columns:repeat(auto-fit,minmax(225px,1fr));gap:11px}.checks label{font-size:14px}button{cursor:pointer;border:0;border-radius:9px;padding:11px 18px;background:#1d5f9d;color:white;font-weight:700;margin:5px 6px 5px 0}button.secondary{background:#dceaf5;color:#173e60}.note{padding:12px 14px;border-radius:9px;background:#eaf2fc;margin:12px 0;line-height:1.65}.danger{background:#fff0ee;border:1px solid #e8b3a8}.warn{background:#fff7e4;border:1px solid #e7d08f}.ok{background:#ebf8f0}#result{line-height:1.7}#result ul{padding-left:21px}small,.muted{color:#64778d}.step{display:inline-block;background:#dceaf5;border-radius:99px;padding:4px 10px;font-size:12px;margin-bottom:10px}.range{font-size:14px}footer{font-size:12px;color:#637284;margin:25px 0;line-height:1.65}@media print{header,button,.input-area{display:none}body{background:white}section{box-shadow:none}}@media(max-width:550px){main{padding:12px}section{padding:15px}header{padding:22px 16px}}
+</style></head><body>
+<header><h1>急診急性疼痛｜互動治療決策導航</h1><p>EUSEM 2025 × ACEP × NICE｜評估 → 安全篩選 → 多模式止痛 → 複評</p></header>
+<main>
+<div class="note warn"><strong>臨床決策輔助原型，不可直接作為醫囑。</strong> 建議需由醫師評估病因、生命徵象、過敏及院內藥品仿單。兒童、懷孕、重大創傷、程序性鎮靜應遵循專用流程。本網站不儲存或傳送個人資料，請勿輸入病人姓名或身分證字號。</div>
+<div class="input-area">
+<section><span class="step">STEP 1</span><h2>危急病因及即時安全檢查</h2>
+<div class="checks">
+<label><input type="checkbox" id="unstable">血流動力不穩定／意識改變／呼吸不穩</label>
+<label><input type="checkbox" id="redflag">疑似 ACS、主動脈剝離、腔室症候群、缺血性肢體、急性腹症等</label>
+<label><input type="checkbox" id="majortrauma">重大創傷或需立即手術處置</label>
+<label><input type="checkbox" id="respRisk">低通氣、睡眠呼吸中止、已有鎮靜或合用鎮靜藥</label>
+</div><p class="muted">若存在危險徵象，需立即啟動病因診治與監測；鎮痛可以同步進行，不應延誤救命處置。</p></section>
+<section><span class="step">STEP 2</span><h2>病人特徵與疼痛分類</h2>
+<div class="grid">
+<label class="field">年齡（歲）<input id="age" type="number" min="0" max="120" value="60"></label>
+<label class="field">體重（kg）<input id="weight" type="number" min="1" max="300" value="65"></label>
+<label class="field">eGFR（mL/min/1.73m²）<input id="egfr" type="number" min="0" max="150" value="75"></label>
+<label class="field">疼痛程度 NRS（0–10）<input id="nrs" type="number" min="0" max="10" value="6"></label>
+<label class="field">疼痛類型<select id="cause"><option value="muscle">肌肉骨骼／扭傷</option><option value="fracture">骨折／創傷</option><option value="renal">腎絞痛／泌尿系統</option><option value="abdominal">腹痛（原因待查）</option><option value="headache">頭痛</option><option value="neuropathic">神經病變性疼痛</option><option value="other">其他／不明</option></select></label>
+<label class="field">病人期望／功能目標<select id="goal"><option>能配合檢查及治療</option><option>能活動或行走</option><option>能休息及睡眠</option><option>疼痛明顯下降</option></select></label>
+</div>
+<h3>相關風險與禁忌（可複選）</h3><div class="checks">
+<label><input type="checkbox" id="aki">目前 AKI</label>
+<label><input type="checkbox" id="dialysis">血液或腹膜透析</label>
+<label><input type="checkbox" id="liver">嚴重肝病／肝硬化</label>
+<label><input type="checkbox" id="pregnant">懷孕／可能懷孕</label>
+<label><input type="checkbox" id="bleed">消化道出血／活動性潰瘍／高出血風險</label>
+<label><input type="checkbox" id="heart">心衰竭、嚴重心血管疾病或體液滯留</label>
+<label><input type="checkbox" id="dehydrated">脫水／低血容量</label>
+<label><input type="checkbox" id="nsaid">已服用 NSAID（如 ibuprofen、diclofenac、ketorolac）</label>
+<label><input type="checkbox" id="opioid">近期已使用 opioid</label>
+<label><input type="checkbox" id="allergy">疑似止痛藥過敏／用藥資料不完整</label>
+</div></section>
+<section><span class="step">STEP 3</span><h2>自動產生治療模式</h2><button id="generate">分析並產生建議</button><button class="secondary" id="reset">重設資料</button></section>
+</div>
+<section id="result" aria-live="polite"><h2>治療方案</h2><p class="muted">請完成資料輸入，再點選「分析並產生建議」。</p></section>
+<section class="input-area"><span class="step">STEP 4</span><h2>疼痛複評與處置摘要</h2>
+<div class="grid"><label class="field">複評 NRS<input type="number" id="repeat" min="0" max="10" placeholder="0–10"></label><label class="field">處置備註<textarea id="notes" rows="2" placeholder="藥物、劑量、時間、生命徵象、是否不良反應"></textarea></label></div>
+<button id="copy">複製治療摘要</button><button class="secondary" onclick="window.print()">列印</button>
+<div id="followup" class="note">未輸入複評疼痛分數。</div></section>
+<section><h2>文獻與使用原則</h2><p>本系統使用 EUSEM 2025 的初始評估、疼痛分層、CERTA 多模式止痛與複評原則；參考 ACEP 2020 非 opioid 優先與 NICE NG39 重大創傷止痛建議。藥物具各國核准差異，選用須符合當地仿單與院內規範。</p>
+<p><a href="https://eusem.org/images/251210_EUSEM_European_Pain_Initiative_Guidelines_Updated_Oct_2025.pdf" target="_blank" rel="noopener">EUSEM 2025 原始手冊</a> · <a href="https://www.acep.org/siteassets/new-pdfs/clinical-policies/opioids-2020.pdf" target="_blank" rel="noopener">ACEP Opioid Policy</a> · <a href="https://www.nice.org.uk/guidance/ng39/chapter/Recommendations" target="_blank" rel="noopener">NICE NG39</a> · <a href="https://www.kidney.org/kidney-topics/pain-medicines-and-kidney-disease" target="_blank" rel="noopener">NKF Kidney Safety</a></p></section>
+<footer>Version 1.0 | 2026-10-12 | Clinical decision support only. 未包含處方自動簽署功能、兒童體重劑量或完整藥物交互作用資料庫。</footer>
+</main>
+<script>
+const $=id=>document.getElementById(id);let last='';
+const ck=id=>$(id).checked;const num=id=>Number($(id).value);
+function render(){
+const age=num('age'),wt=num('weight'),egfr=num('egfr'),n=num('nrs');if([age,wt,egfr,n].some(x=>!Number.isFinite(x))||age<0||wt<=0||egfr<0||n<0||n>10){$('result').innerHTML='<div class="note danger">請確認年齡、體重、eGFR 與 NRS 的數值。</div>';return}
+const child=age<16,older=age>=65,renal=ck('aki')||ck('dialysis')||egfr<30,ckd=egfr<60||renal;
+const unsafeNSAID=renal||ck('bleed')||ck('dehydrated')||ck('heart')||ck('pregnant')||ck('nsaid');
+const critical=ck('unstable')||ck('redflag')||ck('majortrauma');
+const severity=n>=7?'重度':n>=4?'中度':n>0?'輕度':'目前無疼痛';
+let a=[],w=[],safe=[];
+if(critical)w.push('危急徵象：立即安排 ABC、監測與病因處置，必要時啟動急救／外傷／手術流程；止痛不應延誤救命處置。');
+if(child)w.push('本網站不提供兒童藥物劑量或自動選藥。使用兒童專用流程、適當量表及體重計算，避免將成人藥量套用至兒童。');
+if(ck('allergy'))w.push('尚未確認過敏史／用藥史：先核對後再執行處方。');
+if(ck('respRisk')||older)w.push('鎮靜／呼吸抑制風險上升：使用 opioid 或鎮靜藥時需較低起始劑量、滴定與呼吸監測。');
+if(ck('pregnant'))w.push('妊娠情況：先評估胎兒／母體風險；尤其約20週以後避免自行使用 NSAIDs，需依產科及當地仿單評估。');
+if(ck('liver'))w.push('重度肝病：paracetamol 每日總量需保守調整；避免 NSAIDs，opioid 應調整劑量與間隔。');
+if(ck('opioid'))w.push('已使用 opioid：計算先前劑量及給藥時間，避免重複疊加導致呼吸抑制。');
+if(ck('nsaid'))w.push('已使用 NSAID：勿再追加第二種 NSAID。');
+if(ckd)w.push('腎功能下降：系統性 NSAIDs 可能誘發 AKI、體液滯留與出血；晚期 CKD／透析避免常規 morphine、codeine，慎用 hydromorphone。');
+a.push('優先處理疼痛原因、解釋治療目標，必要時冰敷／固定／調整姿勢／放鬆及注意力轉移。');
+if(n===0)a.push('目前疼痛為 0；監測可能再次出現的疼痛，避免不必要止痛藥。');
+else if(child)a.push('使用兒童疼痛量表（依年齡選 FACES／FLACC／NRS），按兒童急診醫囑與院內體重給藥程序治療。');
+else {
+ a.push('可考慮 paracetamol 作為基礎止痛藥；確實查核體重、肝病、複方藥物及 24 小時總量。');
+ if(!unsafeNSAID)a.push('無目前所列明顯禁忌時，可依病因考慮單一 NSAID（例如 ibuprofen 或 ketorolac），使用最低有效劑量與短療程。');
+ else a.push('目前有 NSAID 風險或已用藥，避免常規再使用全身性 NSAIDs；評估替代止痛方式。');
+ if($('cause').value==='fracture')a.push('骨折／髖部創傷：及早固定，合適時考慮超音波導引區域神經阻斷。');
+ if($('cause').value==='headache')a.push('頭痛須排除 secondary headache red flags；opioid 不作一般首選。');
+ if(n>=4)a.push('疼痛中度以上：評估 paracetamol 加上不同機轉的安全治療、適當局部／神經阻斷；快速但非過度鎮靜的止痛為目標。');
+ if(n>=7){a.push('重度疼痛：在監測條件下及時考慮滴定短效 IV／IN opioid，或適當的低劑量 ketamine／神經阻斷；不要為堅持非 opioid 而延誤止痛。');
+ a.push(renal?'晚期 CKD／透析：急性強效止痛可優先考慮由有經驗醫師滴定短效 fentanyl，並監測呼吸；避免將 morphine 設為自動首選。':'一般成人適當情境可滴定 IV morphine；如有禁忌或特定臨床需求可考慮 IV fentanyl。');}
+}
+if(n>=7)safe.push('重度疼痛：初次治療後約 15 分鐘複評。');else if(n>=4)safe.push('中度疼痛：約 15–30 分鐘複評。');else safe.push('輕度疼痛：約 30–60 分鐘複評。');
+safe.push('IV／IN／吸入／SL 後通常約 15 分鐘複評；口服約 30 分鐘起依預期藥效及臨床反應複評。');
+safe.push('評估疼痛分數、功能、意識、呼吸、血壓與副作用；opioid 給藥時須備妥 naloxone。');
+safe.push('無效時重新檢查病因與安全性，再考慮滴定或加上不同作用機轉；避免雙 NSAIDs 與無計畫的 opioid 疊加。');
+const block=(name,items)=>'<h3>'+name+'</h3><ul>'+items.map(x=>'<li>'+x+'</li>').join('')+'</ul>';
+last='疼痛等級：'+severity+'（NRS '+n+'/10）\n年齡 '+age+'歲、體重 '+wt+'kg、eGFR '+egfr+'、透析：'+(ck('dialysis')?'是':'否')+'\n'+[...w,...a,...safe].map(x=>'• '+x).join('\n');
+$('result').innerHTML='<h2>個人化治療決策：'+severity+'（NRS '+n+'/10）</h2>'+(w.length?'<div class="note danger">'+block('風險及安全警示',w)+'</div>':'<div class="note ok">未勾選額外高危險警示，仍須由醫師完整評估。</div>')+block('建議治療路徑',a)+block('複評／升降階規則',safe)+'<div class="note warn">這是治療模式建議，不是已核准的個人醫囑；使用前仍需核對院內藥品濃度、仿單、交互作用、禁忌與實際病況。</div>';
+updateRepeat();}
+function updateRepeat(){const value=$('repeat').value;if(value===''||!last){$('followup').textContent='請先產生建議並輸入複評分數。';return}const v=Number(value),b=num('nrs');if(v<0||v>10){$('followup').textContent='複評 NRS 應為 0–10';return}const d=b-v,p=b>0?Math.round(d/b*100):0;$('followup').textContent='初始 NRS '+b+' → 複評 '+v+'；改善 '+d+' 分'+(b>0?'（'+p+'%）':'')+'。請結合功能目標、用藥時間、呼吸／意識與副作用判讀。'}
+$('generate').addEventListener('click',render);$('reset').addEventListener('click',()=>location.reload());$('repeat').addEventListener('input',updateRepeat);$('copy').addEventListener('click',async()=>{if(!last){alert('請先產生治療建議');return}const t=last+'\n複評：'+$('followup').textContent+'\n處置備註：'+$('notes').value;try{await navigator.clipboard.writeText(t);alert('已複製摘要')}catch(e){prompt('請複製摘要',t)}});
+</script></body></html>
