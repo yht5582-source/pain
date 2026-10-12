@@ -1,18 +1,26 @@
 <!doctype html>
 <html lang="zh-Hant"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>急診急性疼痛臨床決策導航 | EUSEM 2025</title>
+<meta name="description" content="依 EUSEM 2025 急性疼痛指引的急診止痛決策輔助：疼痛分級、腎肝／出血／妊娠安全篩選、多模式止痛、成人劑量參考與複評。">
 <style>
-:root{font-family:system-ui,"Noto Sans TC",sans-serif;color:#17263b;background:#f2f6fb}*{box-sizing:border-box}body{margin:0}header{background:#183252;color:white;padding:25px max(20px,calc((100% - 1000px)/2))}header h1{margin:0 0 10px;font-size:27px}header p{margin:0;color:#cfe1ee}main{max-width:1000px;margin:auto;padding:22px}section,.panel{background:white;border:1px solid #dce5ee;border-radius:14px;padding:22px;margin-bottom:16px;box-shadow:0 2px 8px #1b35540a}h2{font-size:20px;margin:0 0 14px}h3{font-size:16px;margin-bottom:8px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:12px}.field{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:14px}input,select,textarea{width:100%;border:1px solid #b8c9d8;border-radius:8px;padding:10px;font:inherit;background:white;color:#17263b}input[type=checkbox]{width:auto;margin-right:8px}.checks{display:grid;grid-template-columns:repeat(auto-fit,minmax(225px,1fr));gap:11px}.checks label{font-size:14px}button{cursor:pointer;border:0;border-radius:9px;padding:11px 18px;background:#1d5f9d;color:white;font-weight:700;margin:5px 6px 5px 0}button.secondary{background:#dceaf5;color:#173e60}.note{padding:12px 14px;border-radius:9px;background:#eaf2fc;margin:12px 0;line-height:1.65}.danger{background:#fff0ee;border:1px solid #e8b3a8}.warn{background:#fff7e4;border:1px solid #e7d08f}.ok{background:#ebf8f0}#result{line-height:1.7}#result ul{padding-left:21px}small,.muted{color:#64778d}.step{display:inline-block;background:#dceaf5;border-radius:99px;padding:4px 10px;font-size:12px;margin-bottom:10px}.range{font-size:14px}footer{font-size:12px;color:#637284;margin:25px 0;line-height:1.65}@media print{header,button,.input-area{display:none}body{background:white}section{box-shadow:none}}@media(max-width:550px){main{padding:12px}section{padding:15px}header{padding:22px 16px}}
+:root{font-family:system-ui,"Noto Sans TC",sans-serif;color:#17263b;background:#f2f6fb}*{box-sizing:border-box}body{margin:0}header{background:#183252;color:white;padding:25px max(20px,calc((100% - 1000px)/2))}header h1{margin:0 0 10px;font-size:27px}header p{margin:0;color:#cfe1ee}main{max-width:1000px;margin:auto;padding:22px}section,.panel{background:white;border:1px solid #dce5ee;border-radius:14px;padding:22px;margin-bottom:16px;box-shadow:0 2px 8px #1b35540a}h2{font-size:20px;margin:0 0 14px}h3{font-size:16px;margin-bottom:8px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:12px}.field{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:14px}input,select,textarea{width:100%;border:1px solid #b8c9d8;border-radius:8px;padding:10px;font:inherit;background:white;color:#17263b}input[type=checkbox]{width:auto;margin-right:8px}.checks{display:grid;grid-template-columns:repeat(auto-fit,minmax(225px,1fr));gap:11px}.checks label{font-size:14px}button{cursor:pointer;border:0;border-radius:9px;padding:11px 18px;background:#1d5f9d;color:white;font-weight:700;margin:5px 6px 5px 0}button.secondary{background:#dceaf5;color:#173e60}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #f0a33a;outline-offset:2px}.note{padding:12px 14px;border-radius:9px;background:#eaf2fc;margin:12px 0;line-height:1.65}.danger{background:#fff0ee;border:1px solid #e8b3a8}.warn{background:#fff7e4;border:1px solid #e7d08f}.ok{background:#ebf8f0}#result{line-height:1.7}#result ul{padding-left:21px}small,.muted{color:#64778d}.step{display:inline-block;background:#dceaf5;border-radius:99px;padding:4px 10px;font-size:12px;margin-bottom:10px}.range{font-size:14px}footer{font-size:12px;color:#637284;margin:25px 0;line-height:1.65}
+.hint{font-weight:400;font-size:12px;color:#64778d}
+.chip{display:inline-block;border-radius:99px;padding:3px 11px;font-size:13px;font-weight:700;margin:0 6px 6px 0}.chip.ok{background:#d9f2e3;color:#145a32}.chip.caution{background:#fff1c9;color:#7a5200}.chip.avoid{background:#fde0db;color:#8a2111}.chip.info{background:#dceaf5;color:#173e60}
+.tier{border-left:4px solid #1d5f9d;padding:2px 0 2px 14px;margin:14px 0}.tier.t-mild{border-color:#3d9a62}.tier.t-moderate{border-color:#d49a1c}.tier.t-severe{border-color:#c4462f}.tier h3{margin:4px 0}
+.tbl{width:100%;border-collapse:collapse;font-size:14px;margin:6px 0}.tbl th,.tbl td{border:1px solid #dce5ee;padding:8px;text-align:left;vertical-align:top}.tbl th{background:#f2f6fb}.tblwrap{overflow-x:auto}
+#printSummary{display:none}
+@media print{header,button,.input-area,#demoCases,.noprint{display:none!important}#printSummary{display:block}body{background:white}section{box-shadow:none;break-inside:avoid}}
+@media(max-width:550px){main{padding:12px}section{padding:15px}header{padding:22px 16px}header h1{font-size:22px}}
 </style></head><body>
-<header><h1>急診急性疼痛｜互動治療決策導航</h1><p>EUSEM 2025 × ACEP × NICE｜評估 → 安全篩選 → 多模式止痛 → 複評</p></header>
+<header><h1>急診急性疼痛｜互動治療決策導航</h1><p>EUSEM 2025 × ACEP × NICE｜評估 → 安全篩選 → 多模式止痛 → 複評｜v1.1</p></header>
 <main>
 <div class="note warn"><strong>臨床決策輔助原型，不可直接作為醫囑。</strong> 建議需由醫師評估病因、生命徵象、過敏及院內藥品仿單。兒童、懷孕、重大創傷、程序性鎮靜應遵循專用流程。本網站不儲存或傳送個人資料，請勿輸入病人姓名或身分證字號。</div>
 <section class="input-area" id="demoCases"><span class="step">示範教學</span><h2>三組臨床示範病例｜一鍵帶入</h2>
 <p class="muted">所有資料均為虛構教學情境。點選案例後自動填入資料並生成分析，請觀察哪些藥物選項被限制、為什麼限制，以及複評時間。</p>
 <div class="grid">
-<div class="panel" style="margin:0"><h3>案例 A｜一般成人骨折</h3><p>35 歲，70 kg，eGFR 105，橈骨遠端骨折，NRS 8，生命徵象穩定。</p><button type="button" onclick="loadCase('fracture')">載入骨折案例</button></div>
-<div class="panel" style="margin:0"><h3>案例 B｜透析重度疼痛</h3><p>68 歲，60 kg，規律 HD，eGFR 5（僅為示範值），跌倒後髖部骨折，NRS 9。</p><button type="button" onclick="loadCase('dialysis')">載入透析案例</button></div>
-<div class="panel" style="margin:0"><h3>案例 C｜高齡出血風險</h3><p>83 歲，48 kg，eGFR 38，急性膝關節扭傷，NRS 6，近期上消化道出血。</p><button type="button" onclick="loadCase('elder')">載入高齡案例</button></div>
+<div class="panel" style="margin:0"><h3>案例 A｜一般成人骨折</h3><p>35 歲，70 kg，eGFR 105，橈骨遠端骨折，NRS 8，生命徵象穩定。</p><button type="button" data-case="fracture">載入骨折案例</button></div>
+<div class="panel" style="margin:0"><h3>案例 B｜透析重度疼痛</h3><p>68 歲，60 kg，規律 HD，eGFR 5（僅為示範值），跌倒後髖部骨折，NRS 9。</p><button type="button" data-case="dialysis">載入透析案例</button></div>
+<div class="panel" style="margin:0"><h3>案例 C｜高齡出血風險</h3><p>83 歲，48 kg，eGFR 38，急性膝關節扭傷，NRS 6，近期上消化道出血。</p><button type="button" data-case="elder">載入高齡案例</button></div>
 </div><div id="demoExplanation" class="note">請選擇一組案例。讀取後，下方欄位可自行修改以測試不同情境。</div></section>
 <div class="input-area">
 <section><span class="step">STEP 1</span><h2>危急病因及即時安全檢查</h2>
@@ -24,11 +32,11 @@
 </div><p class="muted">若存在危險徵象，需立即啟動病因診治與監測；鎮痛可以同步進行，不應延誤救命處置。</p></section>
 <section><span class="step">STEP 2</span><h2>病人特徵與疼痛分類</h2>
 <div class="grid">
-<label class="field">年齡（歲）<input id="age" type="number" min="0" max="120" value="60"></label>
-<label class="field">體重（kg）<input id="weight" type="number" min="1" max="300" value="65"></label>
-<label class="field">eGFR（mL/min/1.73m²）<input id="egfr" type="number" min="0" max="150" value="75"></label>
+<label class="field">年齡（歲）<input id="age" type="number" min="0" max="120" step="1" value="60" inputmode="numeric"></label>
+<label class="field">體重（kg）<span class="hint">用於 paracetamol 上限與 ketamine 劑量；可留空</span><input id="weight" type="number" min="1" max="300" value="65" inputmode="decimal"></label>
+<label class="field">eGFR（mL/min/1.73m²）<span class="hint">未知請留空，系統會提醒先確認腎功能</span><input id="egfr" type="number" min="0" max="200" value="75" inputmode="decimal"></label>
 <label class="field">初始疼痛 NRS（0–10）<select id="nrs" aria-label="初始 NRS"><option value="0">0 分｜完全不痛</option><option value="1">1 分｜極輕微疼痛</option><option value="2">2 分｜輕微、可察覺</option><option value="3">3 分｜輕度、略感困擾</option><option value="4">4 分｜中度疼痛</option><option value="5">5 分｜中度疼痛</option><option value="6" selected>6 分｜中度、較難忽略</option><option value="7">7 分｜重度疼痛</option><option value="8">8 分｜重度疼痛</option><option value="9">9 分｜極重度疼痛</option><option value="10">10 分｜可想像的最劇烈疼痛</option></select></label>
-<label class="field">疼痛類型<select id="cause"><option value="muscle">肌肉骨骼／扭傷</option><option value="fracture">骨折／創傷</option><option value="renal">腎絞痛／泌尿系統</option><option value="abdominal">腹痛（原因待查）</option><option value="headache">頭痛</option><option value="neuropathic">神經病變性疼痛</option><option value="other">其他／不明</option></select></label>
+<label class="field">疼痛類型<select id="cause"><option value="muscle">肌肉骨骼／扭傷（非骨折）</option><option value="fracture">骨折／創傷</option><option value="back">急性腰背痛</option><option value="renal">腎絞痛／泌尿系統</option><option value="abdominal">腹痛（原因待查）</option><option value="headache">頭痛</option><option value="dental">牙痛</option><option value="neuropathic">神經病變性疼痛</option><option value="other">其他／不明</option></select></label>
 <label class="field">病人期望／功能目標<select id="goal"><option>能配合檢查及治療</option><option>能活動或行走</option><option>能休息及睡眠</option><option>疼痛明顯下降</option></select></label>
 </div>
 <div class="note" id="nrsGuide"><h3 style="margin-top:0">疼痛評分怎麼選？（NRS-11）</h3>
@@ -38,9 +46,9 @@
 <div><strong>1–3 分：輕度</strong><p>通常仍能進行日常活動，疼痛較容易忍受。</p></div>
 <div><strong>4–6 分：中度</strong><p>可能影響專注、睡眠或部分活動，通常需要討論止痛。</p></div>
 <div><strong>7–10 分：重度</strong><p>可能顯著干擾活動或休息，需要及時評估與止痛。</p></div></div>
-<p><strong>重要：</strong>上述活動、睡眠敘述僅是協助病人理解的參考，不是逐分的國際驗證切點；例如骨折、腎絞痛或癌症不各自固定對應某個 NRS。NRS 7 分仍屬重度。處置還應考慮病因、功能目標、想不想止痛及禁忌症。</p>
-<p><strong>無法自行報分時：</strong>幼兒可用 FLACC 或 FACES；進階失智且不能溝通時可用 PAINAD；插管重症可依情境使用 CPOT／BPS。這些工具不得直接當作病人自報 NRS。</p>
-<small>資料來源：EUSEM 2025 第 3、8 章；The Joint Commission pain severity 指標（0、1–3、4–6、7–10）。</small></div>
+<p><strong>重要：</strong>上述活動、睡眠敘述僅是協助病人理解的參考，不是逐分的國際驗證切點；例如骨折、腎絞痛或癌症不各自固定對應某個 NRS。處置還應考慮病因、功能目標、病人是否想要止痛及禁忌症。</p>
+<p><strong>無法自行報分時：</strong>幼兒可用 FLACC 或 FACES；嬰兒可用 CRIES；進階失智且不能溝通時可用 PAINAD；插管重症可依情境使用 CPOT／BPS。這些工具不得直接當作病人自報 NRS。</p>
+<small>資料來源：EUSEM 2025 第 3 章、第 8 章（Figure 8.2：輕度 NRS &lt;4、中度 4–6、重度 7–10）。</small></div>
 <h3>相關風險與禁忌（可複選）</h3><div class="checks">
 <label><input type="checkbox" id="aki">目前 AKI</label>
 <label><input type="checkbox" id="dialysis">血液或腹膜透析</label>
@@ -49,80 +57,301 @@
 <label><input type="checkbox" id="bleed">消化道出血／活動性潰瘍／高出血風險</label>
 <label><input type="checkbox" id="heart">心衰竭、嚴重心血管疾病或體液滯留</label>
 <label><input type="checkbox" id="dehydrated">脫水／低血容量</label>
+<label><input type="checkbox" id="nsaidAllergy">NSAID 過敏／NSAID 誘發氣喘</label>
 <label><input type="checkbox" id="nsaid">已服用 NSAID（如 ibuprofen、diclofenac、ketorolac）</label>
 <label><input type="checkbox" id="opioid">近期已使用 opioid</label>
 <label><input type="checkbox" id="allergy">疑似止痛藥過敏／用藥資料不完整</label>
 </div></section>
-<section><span class="step">STEP 3</span><h2>自動產生治療模式</h2><button id="generate">分析並產生建議</button><button class="secondary" id="reset">重設資料</button></section>
+<section><span class="step">STEP 3</span><h2>自動產生治療模式</h2><button type="button" id="generate">分析並產生建議</button><button type="button" class="secondary" id="reset">重設資料</button><p class="muted" style="margin:6px 0 0">產生建議後，修改任何欄位會自動更新結果與摘要。</p></section>
 </div>
+<section id="printSummary"></section>
 <section id="result" aria-live="polite"><h2>治療方案</h2><p class="muted">請完成資料輸入，再點選「分析並產生建議」。</p></section>
 <section class="input-area"><span class="step">STEP 4</span><h2>疼痛複評與處置摘要</h2>
-<div class="grid"><label class="field">複評 NRS<select id="repeat" aria-label="複評 NRS"><option value="">請選擇複評疼痛程度</option><option value="0">0 分｜完全不痛</option><option value="1">1 分｜極輕微疼痛</option><option value="2">2 分｜輕微、可察覺</option><option value="3">3 分｜輕度、略感困擾</option><option value="4">4 分｜中度疼痛</option><option value="5">5 分｜中度疼痛</option><option value="6">6 分｜中度、較難忽略</option><option value="7">7 分｜重度疼痛</option><option value="8">8 分｜重度疼痛</option><option value="9">9 分｜極重度疼痛</option><option value="10">10 分｜可想像的最劇烈疼痛</option></select></label><label class="field">處置備註<textarea id="notes" rows="2" placeholder="藥物、劑量、時間、生命徵象、是否不良反應"></textarea></label></div>
-<button id="copy">複製治療摘要</button><button class="secondary" onclick="window.print()">列印</button>
-<div id="followup" class="note">未輸入複評疼痛分數。</div></section>
-<section><h2>文獻與使用原則</h2><p>本系統使用 EUSEM 2025 的初始評估、疼痛分層、CERTA 多模式止痛與複評原則；參考 ACEP 2020 非 opioid 優先與 NICE NG39 重大創傷止痛建議。藥物具各國核准差異，選用須符合當地仿單與院內規範。</p>
-<p><a href="https://eusem.org/images/251210_EUSEM_European_Pain_Initiative_Guidelines_Updated_Oct_2025.pdf" target="_blank" rel="noopener">EUSEM 2025 原始手冊</a> · <a href="https://www.acep.org/siteassets/new-pdfs/clinical-policies/opioids-2020.pdf" target="_blank" rel="noopener">ACEP Opioid Policy</a> · <a href="https://www.nice.org.uk/guidance/ng39/chapter/Recommendations" target="_blank" rel="noopener">NICE NG39</a> · <a href="https://www.kidney.org/kidney-topics/pain-medicines-and-kidney-disease" target="_blank" rel="noopener">NKF Kidney Safety</a></p></section>
-<footer>Version 1.0 | 2026-10-12 | Clinical decision support only. 未包含處方自動簽署功能、兒童體重劑量或完整藥物交互作用資料庫。</footer>
+<div class="grid"><label class="field">複評 NRS<select id="repeat" aria-label="複評 NRS"><option value="">請選擇複評疼痛程度</option><option value="0">0 分｜完全不痛</option><option value="1">1 分｜極輕微疼痛</option><option value="2">2 分｜輕微、可察覺</option><option value="3">3 分｜輕度、略感困擾</option><option value="4">4 分｜中度疼痛</option><option value="5">5 分｜中度疼痛</option><option value="6">6 分｜中度、較難忽略</option><option value="7">7 分｜重度疼痛</option><option value="8">8 分｜重度疼痛</option><option value="9">9 分｜極重度疼痛</option><option value="10">10 分｜可想像的最劇烈疼痛</option></select></label>
+<label class="field">已給止痛藥途徑<select id="route"><option value="">未選擇</option><option value="iv">IV 靜脈</option><option value="in">IN 鼻內</option><option value="inh">吸入</option><option value="sl">SL／buccal</option><option value="po">PO 口服</option><option value="im">IM 肌肉注射</option><option value="block">神經阻斷</option></select></label>
+<label class="field">處置備註<textarea id="notes" rows="2" placeholder="藥物、劑量、時間、生命徵象、是否不良反應"></textarea></label></div>
+<button type="button" id="copy">複製治療摘要</button><button type="button" class="secondary" id="print">列印</button>
+<div id="followup" class="note">請先產生建議並輸入複評分數。</div></section>
+<section><h2>文獻與使用原則</h2><p>本系統使用 EUSEM 2025 的初始評估、疼痛分層（Figure 8.2）、成人／兒童治療選項（Figure 8.3a/b）、特殊族群（第 7 章：腎病、肝病、妊娠、高齡）與複評原則（Figure 8.1）；重大創傷參考 NICE NG39 1.7.4–1.7.6，opioid 使用原則參考 ACEP 2020。藥物具各國核准差異（例如 methoxyflurane、metamizole、SL sufentanil 在台灣未必可取得），選用須符合當地仿單與院內規範。</p>
+<p><a href="https://eusem.org/images/251210_EUSEM_European_Pain_Initiative_Guidelines_Updated_Oct_2025.pdf" target="_blank" rel="noopener">EUSEM 2025 原始手冊</a> · <a href="https://www.acep.org/siteassets/new-pdfs/clinical-policies/opioids-2020.pdf" target="_blank" rel="noopener">ACEP Opioid Policy</a> · <a href="https://www.nice.org.uk/guidance/ng39/chapter/Recommendations" target="_blank" rel="noopener">NICE NG39</a> · <a href="https://www.kidney.org/kidney-topics/pain-medicines-and-kidney-disease" target="_blank" rel="noopener">NKF Kidney Safety</a> · <a href="https://yht5582-source.github.io/Migraine--Headache/" target="_blank" rel="noopener">偏頭痛／頭痛專頁</a></p></section>
+<footer>Version 1.1 | 2026-10-12 | Clinical decision support only. 成人劑量僅列 EUSEM 2025 第 8 章原文起始劑量供核對；未包含處方自動簽署、兒童體重劑量或完整藥物交互作用資料庫。</footer>
 </main>
 <script>
-const $=id=>document.getElementById(id);let last='';
-const cases={
- fracture:{age:35,weight:70,egfr:105,nrs:8,cause:'fracture',goal:'能配合檢查及治療',flags:[],repeat:4,notes:'示範：固定骨折、評估神經血管狀態；若有移位需復位，視情況採區域阻斷及滴定短效止痛。'},
- dialysis:{age:68,weight:60,egfr:5,nrs:9,cause:'fracture',goal:'能配合檢查及治療',flags:['dialysis'],repeat:5,notes:'示範：髖部骨折需影像與骨科評估；可考慮髂筋膜阻斷；慎選短效 opioid，監測呼吸與鎮靜。透析患者 eGFR 不用於決定透析需求。'},
- elder:{age:83,weight:48,egfr:38,nrs:6,cause:'muscle',goal:'能活動或行走',flags:['bleed'],repeat:3,notes:'示範：需排除隱匿骨折、跌倒原因及目前是否持續出血；避免常規全身性 NSAID，檢查低體重 paracetamol 每日上限。'}
+/*ENGINE-START*/
+var PAIN = (function () {
+  var SEV_LABEL = { none: '目前無疼痛', mild: '輕度', moderate: '中度', severe: '重度' };
+  var CAUSE_LABEL = { muscle: '肌肉骨骼／扭傷（非骨折）', fracture: '骨折／創傷', back: '急性腰背痛', renal: '腎絞痛／泌尿系統', abdominal: '腹痛（原因待查）', headache: '頭痛', dental: '牙痛', neuropathic: '神經病變性疼痛', other: '其他／不明' };
+  // EUSEM 2025 ch.7 / ACEP 2020: opioids are not first-line for these presentations
+  var OPIOID_NOT_FIRST = { muscle: 1, back: 1, headache: 1, dental: 1 };
+  var FLAG_LABEL = { unstable: '血流動力／意識／呼吸不穩', redflag: '危急病因疑慮', majortrauma: '重大創傷', respRisk: '呼吸抑制風險', aki: 'AKI', dialysis: '透析', liver: '嚴重肝病', pregnant: '懷孕／可能懷孕', bleed: '出血／潰瘍風險', heart: '心衰竭／嚴重心血管病', dehydrated: '脫水', nsaidAllergy: 'NSAID 過敏／誘發氣喘', nsaid: '已用 NSAID', opioid: '近期已用 opioid', allergy: '過敏／用藥史未確認' };
+
+  function sevOf(n) { return n >= 7 ? 'severe' : n >= 4 ? 'moderate' : n >= 1 ? 'mild' : 'none'; }
+  function isNum(x) { return typeof x === 'number' && isFinite(x); }
+  function r1(x) { return Math.round(x * 10) / 10; }
+
+  function paracetamol(s, f) {
+    // EUSEM ch.8: adults 1 g q4h, max 4 g/24 h, ≤3 days; ch.7: liver disease ≤2 g/day.
+    // Weight <50 kg / hepatotoxicity risk: IV paracetamol SmPC 15 mg/kg, ≤60 mg/kg/day (≤3 g); risk factors ≤3 g.
+    var wt = s.weight;
+    if (f.liver) return { dose: '每次 ≤1 g（分次）', maxG: 2, why: '嚴重肝病：每日總量 ≤2 g（EUSEM 第 7 章）' };
+    if (isNum(wt) && wt < 50) {
+      var per = Math.round(wt * 15), max = r1(Math.min(wt * 60 / 1000, 3));
+      return { dose: '15 mg/kg ≈ ' + per + ' mg／次', maxG: max, why: '體重 <50 kg：依體重計算，每日 ≤60 mg/kg 且 ≤3 g（IV paracetamol 仿單）' };
+    }
+    if (f.dehydrated) return { dose: '1 g／次，間隔 ≥4 小時', maxG: 3, why: '脫水為肝毒性風險因子：每日 ≤3 g（IV paracetamol 仿單）' };
+    if (!isNum(wt)) return { dose: '1 g／次，間隔 ≥4 小時', maxG: 4, why: '體重未填：若體重 <50 kg 需改用 15 mg/kg 計算', needWeight: true };
+    return { dose: '1 g／次，間隔 ≥4 小時', maxG: 4, why: '一般成人：每日 ≤4 g，連續 ≤3 天（EUSEM 第 8 章）' };
+  }
+
+  function evaluate(s) {
+    var f = s.flags || {};
+    var age = s.age, wt = s.weight, egfr = s.egfr, n = s.nrs, cause = s.cause || 'other';
+    var errors = [];
+    if (!isNum(age) || age < 0 || age > 120) errors.push('請輸入年齡（0–120 歲）。');
+    if (wt != null && (!isNum(wt) || wt <= 0 || wt > 300)) errors.push('體重需介於 1–300 kg，未知請留空。');
+    if (egfr != null && (!isNum(egfr) || egfr < 0 || egfr > 200)) errors.push('eGFR 需介於 0–200，未知請留空。');
+    if (!isNum(n) || n < 0 || n > 10 || Math.round(n) !== n) errors.push('NRS 需為 0–10 的整數。');
+    if (errors.length) return { errors: errors };
+
+    var sev = sevOf(n);
+    var infant = age < 1, child = age >= 1 && age < 16, adult = age >= 16, older = age >= 65;
+    var critical = !!(f.unstable || f.redflag || f.majortrauma);
+    var renalSevere = !!(f.aki || f.dialysis || (isNum(egfr) && egfr < 30));
+    var renalMod = !renalSevere && isNum(egfr) && egfr < 60;
+    var egfrUnknown = !isNum(egfr) && !f.dialysis;
+
+    // ---- NSAID status ----
+    var nsAvoid = [], nsCaution = [];
+    if (f.aki) nsAvoid.push('AKI');
+    if (f.dialysis) nsAvoid.push('透析');
+    else if (isNum(egfr) && egfr < 30) nsAvoid.push('eGFR <30');
+    if (f.bleed) nsAvoid.push('消化道出血／潰瘍／高出血風險');
+    if (f.liver) nsAvoid.push('嚴重肝病');
+    if (f.heart) nsAvoid.push('心衰竭／嚴重心血管病／體液滯留');
+    if (f.dehydrated) nsAvoid.push('脫水／低血容量');
+    if (f.pregnant) nsAvoid.push('懷孕（≥20 週及第三孕期避免）');
+    if (f.nsaidAllergy) nsAvoid.push('NSAID 過敏／誘發氣喘');
+    if (f.nsaid) nsAvoid.push('已使用 NSAID，不可再加第二種');
+    if (renalMod) nsCaution.push('eGFR 30–59：僅短期、最低有效劑量並追蹤腎功能');
+    if (older) nsCaution.push('≥65 歲：腸胃出血、腎與心血管風險較高，短期最低劑量');
+    if (adult && egfrUnknown) nsCaution.push('eGFR 未知：使用前先確認腎功能與脫水狀態');
+    var nsaid = nsAvoid.length ? 'avoid' : nsCaution.length ? 'caution' : 'ok';
+
+    var morphineAvoid = renalSevere;                  // EUSEM ch.7: avoid morphine/codeine in kidney disease
+    var ketamineAvoid = !!f.pregnant;                 // EUSEM ch.8: avoid in pregnancy
+    var para = paracetamol(s, f);
+
+    var warnings = [], tiers = [], avoid = [], doses = [], reassess = [], causeNotes = [];
+
+    // ---- warnings ----
+    if (critical) warnings.push('危急徵象：立即安排 ABC、監測與病因處置，必要時啟動急救／外傷／手術流程；止痛應同步進行，不應延誤救命處置。');
+    if (f.unstable || f.majortrauma) warnings.push('意識改變、頭部外傷或疑氣胸時禁用 nitrous oxide（EUSEM 第 8 章）。');
+    if (infant) warnings.push('未滿 1 歲不在 EUSEM 2025 成人／兒童建議範圍內，請依新生兒／嬰兒專用流程與 CRIES／FLACC 評估。');
+    else if (child) warnings.push('16 歲以下：本網站不提供兒童劑量，請依兒童急診流程與體重給藥。Codeine 禁用於兒童（EUSEM Figure 8.3b）。');
+    if (f.allergy) warnings.push('尚未確認過敏史／用藥史：先核對後再執行處方。');
+    if (f.respRisk || older) warnings.push('鎮靜／呼吸抑制風險上升：opioid 或鎮靜藥需較低起始劑量、滴定與呼吸監測；避免與 benzodiazepine 疊加。');
+    if (f.pregnant) warnings.push('妊娠：paracetamol 為首選；NSAIDs 於約 20 週後與第三孕期避免；ketamine 避免；短期 opioid 可於監測下使用但生產時避免；需會同產科評估。');
+    if (f.liver) warnings.push('嚴重肝病：paracetamol 每日 ≤2 g；避免 NSAIDs；所有 opioid 需降低劑量與給藥頻率；ketamine 考慮減量。');
+    if (f.opioid) warnings.push('近期已使用 opioid：計算先前劑量及給藥時間，避免重複疊加；IV opioid 不可與另一種 IV opioid 併用。');
+    if (f.nsaid) warnings.push('已使用 NSAID：勿再追加第二種 NSAID（例如已用 ibuprofen，不再給 ketorolac／diclofenac）。');
+    if (renalSevere) warnings.push('AKI／eGFR <30／透析：避免 NSAIDs、morphine、codeine；opioid 僅在其他方式無法控制時使用，優先由有經驗者滴定短效 fentanyl 並監測呼吸。');
+    else if (renalMod) warnings.push('eGFR 30–59：paracetamol 優先' + (nsAvoid.length ? '。' : '；NSAIDs 僅短期謹慎使用並追蹤腎功能。'));
+    if (f.heart && !ketamineAvoid) warnings.push('嚴重心血管疾病：ketamine 會升高血壓，需權衡疼痛本身造成的血壓上升。');
+    if (para.needWeight && adult && n > 0) warnings.push('未填體重：paracetamol 上限需確認體重 ≥50 kg。');
+
+    // ---- cause-specific ----
+    if (cause === 'fracture') causeNotes.push('骨折／創傷：及早固定、冰敷、抬高；合適時考慮超音波導引區域神經阻斷（髖部骨折如 fascia iliaca block）。骨折屬於可使用 opioid 的情境。');
+    if (cause === 'renal') causeNotes.push('腎絞痛：無禁忌時 NSAID 優於 opioid（較少需要救援止痛、較少嘔吐；EUSEM 引 Pathan 2018 統合分析）；NSAID 禁忌時改用 IV paracetamol、ketamine 或 opioid。合併發燒或無尿需立即泌尿科處置。');
+    if (cause === 'abdominal') causeNotes.push('腹痛原因待查：給予止痛（包含 opioid）不會增加診斷錯誤，不應為等待外科評估而延遲止痛（EUSEM 第 1 章）。');
+    if (cause === 'headache') causeNotes.push('頭痛：先排除 secondary headache red flags（突發雷擊樣、神經學缺損、發燒頸僵硬、外傷、懷孕、免疫低下、≥50 歲新發）；opioid 不作一般首選。偏頭痛可用專屬急性治療（見頭痛專頁）。');
+    if (cause === 'back') causeNotes.push('急性腰背痛：先排除馬尾症候群、感染、腫瘤、主動脈病變；opioid 不作首選，鼓勵維持活動。');
+    if (cause === 'dental') causeNotes.push('牙痛：NSAID ± paracetamol 為主，opioid 不作首選；安排牙科根本處置。');
+    if (cause === 'muscle') causeNotes.push('非骨折肌肉骨骼痛：外用或口服 NSAID、paracetamol、冰敷／固定為主；opioid 不作首選。需排除隱匿骨折。');
+    if (cause === 'neuropathic') causeNotes.push('神經病變性疼痛：可考慮 lidocaine 貼片；急診止痛後安排門診調整神經病變性用藥。');
+    if (f.majortrauma && adult) causeNotes.push('重大創傷（NICE NG39 1.7.4–1.7.6）：IV morphine 為第一線並依反應調整；尚無 IV 時考慮 IN ketamine；ketamine（止痛劑量）為第二線。' + (morphineAvoid ? '本例腎功能嚴重受損，改以 fentanyl 為主。' : ''));
+
+    var nonPharm = '非藥物：說明治療目標（改善而非完全無痛）、冰／熱敷、固定、姿勢調整、分散注意力。';
+
+    // ---- treatment tiers (EUSEM Figure 8.3a adults / 8.3b children) ----
+    if (n === 0) {
+      tiers.push({ key: 'none', title: '目前無疼痛', items: ['監測可能再出現的疼痛，避免不必要的止痛藥；預期疼痛會加劇時可考慮預防性止痛。'] });
+    } else if (infant) {
+      tiers.push({ key: 'none', title: '超出本工具範圍', items: ['請使用嬰兒專用疼痛評估與給藥流程。', nonPharm] });
+    } else if (child) {
+      var cm = ['口服 paracetamol', f.nsaidAllergy || f.bleed || f.dehydrated || renalSevere || f.nsaid ? '口服 ibuprofen：本例有 NSAID 禁忌或已用過，不建議' : '口服 ibuprofen', '外用局部麻醉凝膠（lidocaine／prilocaine），可協助後續 IV 置放（需 30–60 分鐘起效）', nonPharm + '兒童可加玩具、家長陪伴。'];
+      tiers.push({ key: 'mild', title: '輕度（EUSEM Figure 8.3b，兒童 >1–≤15 歲）', items: cm });
+      if (n >= 4) tiers.push({ key: 'moderate', title: '中度：加上不同類別', items: ['吸入 nitrous oxide（等待其他止痛起效時）', 'IV paracetamol 或 IV NSAID（擇一 NSAID）', 'IN／霧化／IV ketamine', '口服 morphine', '適當時神經阻斷'] });
+      if (n >= 7) tiers.push({ key: 'severe', title: '重度：再加上不同類別', items: ['IN／SL／IV fentanyl', 'IV／口服 morphine（監測呼吸與鎮靜）', 'IN／霧化／IV ketamine', '神經阻斷', 'opioid 可合併 ondansetron 預防嘔吐；備妥 naloxone'] });
+    } else {
+      var mild = [nonPharm];
+      mild.push('Paracetamol 口服為基礎：' + para.dose + '，每日上限 ' + para.maxG + ' g。' + (para.why ? '（' + para.why + '）' : ''));
+      if (nsaid === 'ok') mild.push('外用或口服 NSAID（例如 ibuprofen、diclofenac）擇一，最低有效劑量、短療程。');
+      else if (nsaid === 'caution') mild.push('外用 NSAID 優先；口服 NSAID 需謹慎：' + nsCaution.join('；') + '。');
+      else mild.push('避免全身性 NSAIDs（' + nsAvoid.join('、') + '）。');
+      tiers.push({ key: 'mild', title: '輕度 NRS 1–3：單一口服／外用藥（EUSEM Figure 8.3a）', items: mild });
+
+      if (n >= 4) {
+        var mod = ['在輕度方案上加入「不同機轉或不同途徑」的藥物，而非只加大同類劑量。'];
+        mod.push('IV paracetamol（無法口服或需較快起效時；同一 24 小時總量合併計算）。');
+        if (nsaid !== 'avoid') mod.push('IV ketorolac（若尚未使用其他 NSAID；與口服 NSAID 不可併用）。');
+        mod.push('吸入 nitrous oxide 或 methoxyflurane 作為等待期橋接（若院內可取得；' + (f.unstable || f.majortrauma ? '本例有意識／外傷禁忌，避免 nitrous oxide' : '頭部外傷、意識改變、氣胸、中耳炎、潛水減壓病禁用 nitrous oxide') + '）。');
+        mod.push('外用 lidocaine（表淺傷口或局部疼痛）。');
+        if (!ketamineAvoid) mod.push('低劑量 IN／霧化／IV ketamine（可在 opioid 之前使用）。');
+        if (OPIOID_NOT_FIRST[cause]) mod.push('口服 opioid：此類疼痛不作首選，僅在非 opioid 不足時短期使用。');
+        else mod.push('口服 immediate-release opioid（' + (morphineAvoid ? '腎功能嚴重受損避免 morphine' : '首選 morphine') + '）。');
+        mod.push('適當時神經阻斷（例如骨折）。');
+        tiers.push({ key: 'moderate', title: '中度 NRS 4–6：加上不同機轉／途徑', items: mod });
+      }
+      if (n >= 7) {
+        var sv = [];
+        if (!ketamineAvoid) sv.push('先給 ketamine（至可用上限）再滴定 opioid，可降低呼吸抑制風險（EUSEM 第 8 章）。');
+        if (OPIOID_NOT_FIRST[cause]) sv.push('此類疼痛 opioid 不作首選：先最大化非 opioid、ketamine 與局部處置；仍無法控制才短期滴定 opioid。');
+        if (morphineAvoid) sv.push('IN／IV fentanyl 為主要 opioid（避免 morphine、codeine）；由有經驗者滴定並監測呼吸。');
+        else sv.push('IV morphine 為首選 opioid；morphine 禁忌時改 IN／IV fentanyl（EUSEM 第 7 章）。');
+        sv.push('神經阻斷（bupivacaine／ropivacaine）適用於骨折等特定部位，並可減少全身性 opioid。');
+        sv.push('不要為堅持非 opioid 而延誤重度疼痛的止痛；opioid 給藥時備妥 naloxone。');
+        tiers.push({ key: 'severe', title: '重度 NRS 7–10：再加上不同類別', items: sv });
+      }
+    }
+
+    // ---- adult dose reference (EUSEM 2025 ch.8 "Dosing considerations for adults") ----
+    if (adult && n > 0) {
+      doses.push({ drug: 'Paracetamol PO／IV', dose: para.dose, note: '每日上限 ' + para.maxG + ' g；' + para.why });
+      if (n >= 4 && !ketamineAvoid) {
+        var k = isNum(wt) ? '（' + r1(wt * 0.1) + ' mg）' : '', kin = isNum(wt) ? '（' + r1(wt * 0.7) + ' mg）' : '';
+        doses.push({ drug: 'Ketamine', dose: 'IV 0.1 mg/kg' + k + '；IN 0.7 mg/kg' + kin, note: 'IV 重複間隔 ≥10 分鐘；IN 追加 0.3–0.5 mg/kg 間隔 ≥15 分鐘。注意唾液分泌與氣道。' + (f.liver ? '肝病考慮減量。' : '') });
+      }
+      if (n >= 7) {
+        doses.push({ drug: 'Fentanyl IN／IV／霧化', dose: '起始 50 μg', note: '可重複至總量 200 μg；IN 不足時改 IV fentanyl 或 IV morphine。' + (f.respRisk || older || f.liver ? '本例呼吸／高齡／肝病風險：由低劑量開始。' : '') });
+        if (!morphineAvoid) doses.push({ drug: 'Morphine IV', dose: '2.5–15 mg，4–5 分鐘緩慢推注', note: '依疼痛、反應與 opioid 耐受個別化，由低劑量開始滴定。' + (f.respRisk || older || f.liver ? '本例建議由 2.5 mg 起。' : '') });
+      }
+    }
+
+    // ---- avoid list ----
+    if (!infant && n > 0) {
+      if (adult) avoid.push('Codeine、tramadol、oxycodone：EUSEM 2025 不建議；hydromorphone 不作第一線 opioid。');
+      avoid.push('兩種 NSAID 併用；兩種 IV opioid 併用；同類藥物疊加取代換類升階。');
+      avoid.push('IM 途徑僅在口服／IN／吸入／IV 皆不可行時使用；胸痛不可 IM 給藥。');
+      if (morphineAvoid) avoid.push('Morphine、codeine（腎功能嚴重受損，活性代謝物蓄積）。');
+      if (ketamineAvoid) avoid.push('Ketamine（妊娠）。');
+      if (nsaid === 'avoid') avoid.push('全身性 NSAIDs：' + nsAvoid.join('、') + '。');
+    }
+
+    // ---- reassessment (EUSEM Figure 8.1) ----
+    if (sev === 'severe') reassess.push('重度疼痛：給藥後約 15 分鐘第一次複評。');
+    else if (sev === 'moderate') reassess.push('中度疼痛：約 15–30 分鐘第一次複評。');
+    else reassess.push('輕度或無疼痛：約 30–60 分鐘第一次複評。');
+    reassess.push('依給藥途徑：IV／IN／吸入／SL 約 15 分鐘；PO／IM 約 30 分鐘。');
+    reassess.push('評估疼痛分數、功能目標（' + (s.goal || '未設定') + '）、意識、呼吸、血壓與副作用。');
+    reassess.push('無明顯改善：先重新檢查病因與併發症，再升階——增加既有藥物劑量、加入不同類別藥物或改用不同途徑。');
+    if (n >= 7 || f.opioid) reassess.push('opioid 出院處方最多 2–3 天，並事先討論停藥計畫。');
+
+    return {
+      errors: null, sev: sev, sevLabel: SEV_LABEL[sev], n: n, infant: infant, child: child, adult: adult, older: older,
+      critical: critical, renalSevere: renalSevere, renalMod: renalMod, egfrUnknown: egfrUnknown,
+      nsaid: nsaid, nsAvoid: nsAvoid, nsCaution: nsCaution, morphineAvoid: morphineAvoid, ketamineAvoid: ketamineAvoid,
+      para: para, warnings: warnings, causeNotes: causeNotes, tiers: tiers, doses: doses, avoid: avoid, reassess: reassess,
+      causeLabel: CAUSE_LABEL[cause] || cause
+    };
+  }
+
+  // EUSEM ch.3: a 30–35% reduction is rated clinically meaningful by ED patients; Figure 8.1: not relieved → escalate.
+  function followup(base, rep, route) {
+    if (!isNum(base) || !isNum(rep) || rep < 0 || rep > 10) return null;
+    var d = base - rep, pct = base > 0 ? Math.round(d / base * 100) : null;
+    var next = route === 'po' || route === 'im' ? 30 : route ? 15 : null;
+    var status, action;
+    if (base === 0 && rep === 0) { status = 'none'; action = '持續無痛，依常規監測。'; }
+    else if (rep > base) { status = 'worse'; action = '疼痛加劇：立即重新評估病因與併發症（例如腔室症候群、缺血、內出血），再升階止痛。'; }
+    else if (pct !== null && pct >= 30 && rep < 4) { status = 'relieved'; action = '已達臨床意義改善且降至輕度：持續定期複評，評估降階與出院止痛計畫。'; }
+    else if (pct !== null && pct >= 30) { status = 'partial'; action = '已有臨床意義改善（≥30%）但仍屬中度以上：與病人確認功能目標是否達成；未達成則依原則升階。'; }
+    else { status = 'notRelieved'; action = '改善不足（<30%）：升階——增加既有藥物劑量、加入不同類別藥物，或改用起效較快的途徑；並重新檢查病因。'; }
+    return { d: d, pct: pct, status: status, action: action, next: next };
+  }
+
+  return { evaluate: evaluate, followup: followup, sevOf: sevOf, FLAG_LABEL: FLAG_LABEL };
+})();
+if (typeof module !== 'undefined') module.exports = PAIN;
+/*ENGINE-END*/
+
+const $ = id => document.getElementById(id);
+const FLAGS = ['unstable','redflag','majortrauma','respRisk','aki','dialysis','liver','pregnant','bleed','heart','dehydrated','nsaidAllergy','nsaid','opioid','allergy'];
+let last = '', generated = false, R = null;
+const cases = {
+ fracture:{age:35,weight:70,egfr:105,nrs:8,cause:'fracture',goal:'能配合檢查及治療',flags:[],repeat:4,route:'iv',notes:'示範：固定骨折、評估神經血管狀態；若有移位需復位，視情況採區域阻斷及滴定短效止痛。'},
+ dialysis:{age:68,weight:60,egfr:5,nrs:9,cause:'fracture',goal:'能配合檢查及治療',flags:['dialysis'],repeat:5,route:'iv',notes:'示範：髖部骨折需影像與骨科評估；可考慮髂筋膜阻斷；慎選短效 opioid，監測呼吸與鎮靜。透析患者 eGFR 不用於決定透析需求。'},
+ elder:{age:83,weight:48,egfr:38,nrs:6,cause:'muscle',goal:'能活動或行走',flags:['bleed'],repeat:3,route:'po',notes:'示範：需排除隱匿骨折、跌倒原因及目前是否持續出血；避免常規全身性 NSAID，檢查低體重 paracetamol 每日上限。'}
+};
+const explain = {
+ fracture:'教學觀察：NRS 8 屬重度，結果會列出「先 ketamine 再滴定 opioid」、IV morphine 首選與神經阻斷；腎功能及出血風險未見預設禁忌，但仍需核對過敏與用藥。',
+ dialysis:'教學觀察：透析使 NSAIDs、morphine、codeine 被列入避免，opioid 改以 fentanyl 為主並優先考慮髂筋膜阻斷。透析患者不能憑 eGFR 5 判斷透析充分性。',
+ elder:'教學觀察：NRS 6 屬中度；近期上消化道出血使全身性 NSAIDs 被列入避免。48 kg 使 paracetamol 改以 15 mg/kg（約 720 mg／次）計算，每日上限約 2.9 g。'
 };
 function loadCase(key){
- const c=cases[key];if(!c)return;
- ['unstable','redflag','majortrauma','respRisk','aki','dialysis','liver','pregnant','bleed','heart','dehydrated','nsaid','opioid','allergy'].forEach(id=>$(id).checked=c.flags.includes(id));
- ['age','weight','egfr','nrs','cause','goal'].forEach(id=>$(id).value=c[id]);
- $('repeat').value=c.repeat;$('notes').value=c.notes;
- const explain={
- fracture:'教學觀察：NRS 8 屬重度，可及時止痛並考慮骨折固定與區域神經阻斷；腎功能及出血風險未見預設禁忌，不代表可免除過敏及用藥核對。',
- dialysis:'教學觀察：CKD／透析警示應顯示避免常規全身性 NSAIDs、morphine 及 codeine；重度疼痛可評估監測下滴定 fentanyl／區域阻斷。透析患者不能憑 eGFR 5 判斷透析充分性。',
- elder:'教學觀察：NRS 6 屬中度；近期上消化道出血使全身性 NSAIDs 不適當。83 歲且 48 kg 必須重新檢視 paracetamol 劑量上限及跌倒／骨折風險。'
- };
- $('demoExplanation').textContent=explain[key];
- render();$('result').scrollIntoView({behavior:'smooth',block:'start'});
+ const c = cases[key]; if(!c) return;
+ FLAGS.forEach(id => $(id).checked = c.flags.includes(id));
+ ['age','weight','egfr','nrs','cause','goal','repeat','route','notes'].forEach(id => $(id).value = c[id]);
+ $('demoExplanation').textContent = explain[key];
+ render(); $('result').scrollIntoView({behavior:'smooth', block:'start'});
 }
+const optNum = id => { const v = $(id).value.trim(); return v === '' ? null : Number(v); };
+function readState(){
+ const flags = {}; FLAGS.forEach(id => flags[id] = $(id).checked);
+ return { age: optNum('age'), weight: optNum('weight'), egfr: optNum('egfr'), nrs: Number($('nrs').value), cause: $('cause').value, goal: $('goal').value, flags };
+}
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const list = items => '<ul>' + items.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul>';
+const CHIP = {ok:['ok','NSAID：可考慮'],caution:['caution','NSAID：謹慎'],avoid:['avoid','NSAID：避免']};
 
-const ck=id=>$(id).checked;const num=id=>Number($(id).value);
 function render(){
-const age=num('age'),wt=num('weight'),egfr=num('egfr'),n=num('nrs');if([age,wt,egfr,n].some(x=>!Number.isFinite(x))||age<0||wt<=0||egfr<0||n<0||n>10){$('result').innerHTML='<div class="note danger">請確認年齡、體重、eGFR 與 NRS 的數值。</div>';return}
-const child=age<16,older=age>=65,renal=ck('aki')||ck('dialysis')||egfr<30,ckd=egfr<60||renal;
-const unsafeNSAID=renal||ck('bleed')||ck('dehydrated')||ck('heart')||ck('pregnant')||ck('nsaid');
-const critical=ck('unstable')||ck('redflag')||ck('majortrauma');
-const severity=n>=7?'重度':n>=4?'中度':n>0?'輕度':'目前無疼痛';
-let a=[],w=[],safe=[];
-if(critical)w.push('危急徵象：立即安排 ABC、監測與病因處置，必要時啟動急救／外傷／手術流程；止痛不應延誤救命處置。');
-if(child)w.push('本網站不提供兒童藥物劑量或自動選藥。使用兒童專用流程、適當量表及體重計算，避免將成人藥量套用至兒童。');
-if(ck('allergy'))w.push('尚未確認過敏史／用藥史：先核對後再執行處方。');
-if(ck('respRisk')||older)w.push('鎮靜／呼吸抑制風險上升：使用 opioid 或鎮靜藥時需較低起始劑量、滴定與呼吸監測。');
-if(ck('pregnant'))w.push('妊娠情況：先評估胎兒／母體風險；尤其約20週以後避免自行使用 NSAIDs，需依產科及當地仿單評估。');
-if(ck('liver'))w.push('重度肝病：paracetamol 每日總量需保守調整；避免 NSAIDs，opioid 應調整劑量與間隔。');
-if(ck('opioid'))w.push('已使用 opioid：計算先前劑量及給藥時間，避免重複疊加導致呼吸抑制。');
-if(ck('nsaid'))w.push('已使用 NSAID：勿再追加第二種 NSAID。');
-if(ckd)w.push('腎功能下降：系統性 NSAIDs 可能誘發 AKI、體液滯留與出血；晚期 CKD／透析避免常規 morphine、codeine，慎用 hydromorphone。');
-a.push('優先處理疼痛原因、解釋治療目標，必要時冰敷／固定／調整姿勢／放鬆及注意力轉移。');
-if(n===0)a.push('目前疼痛為 0；監測可能再次出現的疼痛，避免不必要止痛藥。');
-else if(child)a.push('使用兒童疼痛量表（依年齡選 FACES／FLACC／NRS），按兒童急診醫囑與院內體重給藥程序治療。');
-else {
- a.push('可考慮 paracetamol 作為基礎止痛藥；確實查核體重、肝病、複方藥物及 24 小時總量。');
- if(!unsafeNSAID)a.push('無目前所列明顯禁忌時，可依病因考慮單一 NSAID（例如 ibuprofen 或 ketorolac），使用最低有效劑量與短療程。');
- else a.push('目前有 NSAID 風險或已用藥，避免常規再使用全身性 NSAIDs；評估替代止痛方式。');
- if($('cause').value==='fracture')a.push('骨折／髖部創傷：及早固定，合適時考慮超音波導引區域神經阻斷。');
- if($('cause').value==='headache')a.push('頭痛須排除 secondary headache red flags；opioid 不作一般首選。');
- if(n>=4)a.push('疼痛中度以上：評估 paracetamol 加上不同機轉的安全治療、適當局部／神經阻斷；快速但非過度鎮靜的止痛為目標。');
- if(n>=7){a.push('重度疼痛：在監測條件下及時考慮滴定短效 IV／IN opioid，或適當的低劑量 ketamine／神經阻斷；不要為堅持非 opioid 而延誤止痛。');
- a.push(renal?'晚期 CKD／透析：急性強效止痛可優先考慮由有經驗醫師滴定短效 fentanyl，並監測呼吸；避免將 morphine 設為自動首選。':'一般成人適當情境可滴定 IV morphine；如有禁忌或特定臨床需求可考慮 IV fentanyl。');}
+ generated = true;
+ const s = readState(); R = PAIN.evaluate(s);
+ if (R.errors){ $('result').innerHTML = '<h2>治療方案</h2><div class="note danger">' + list(R.errors) + '</div>'; last=''; updateRepeat(); return; }
+ const flagsOn = FLAGS.filter(id => s.flags[id]).map(id => PAIN.FLAG_LABEL[id]);
+ let chips = '<span class="chip info">' + esc(R.causeLabel) + '</span>';
+ if (R.adult && R.n > 0) chips += '<span class="chip ' + CHIP[R.nsaid][0] + '">' + CHIP[R.nsaid][1] + '</span>' + '<span class="chip ' + (R.morphineAvoid?'avoid':'ok') + '">Morphine：' + (R.morphineAvoid?'避免':'可用') + '</span>' + '<span class="chip ' + (R.ketamineAvoid?'avoid':'ok') + '">Ketamine：' + (R.ketamineAvoid?'避免':'可用') + '</span>' + '<span class="chip info">Paracetamol ≤' + R.para.maxG + ' g/日</span>';
+ let h = '<h2>個人化治療決策：' + R.sevLabel + '（NRS ' + R.n + '/10）</h2><div>' + chips + '</div>';
+ h += R.warnings.length ? '<div class="note danger"><h3>風險及安全警示</h3>' + list(R.warnings) + '</div>' : '<div class="note ok">未勾選額外高危險警示，仍須由醫師完整評估。</div>';
+ if (R.causeNotes.length) h += '<h3>病因導向重點</h3>' + list(R.causeNotes);
+ h += '<h3>建議治療路徑（依嚴重度逐層疊加）</h3>' + R.tiers.map(t => '<div class="tier t-' + t.key + '"><h3>' + esc(t.title) + '</h3>' + list(t.items) + '</div>').join('');
+ if (R.doses.length) h += '<h3>成人起始劑量參考（EUSEM 2025 第 8 章）</h3><div class="tblwrap"><table class="tbl"><thead><tr><th>藥物</th><th>劑量</th><th>注意</th></tr></thead><tbody>' + R.doses.map(d => '<tr><td>' + esc(d.drug) + '</td><td>' + esc(d.dose) + '</td><td>' + esc(d.note) + '</td></tr>').join('') + '</tbody></table></div><p class="muted" style="margin:4px 0 0">劑量僅供核對，給藥前仍須依院內濃度、仿單、腎肝功能與病人反應個別調整。</p>';
+ if (R.avoid.length) h += '<div class="note warn"><h3>避免／不建議</h3>' + list(R.avoid) + '</div>';
+ h += '<h3>複評／升降階規則</h3>' + list(R.reassess);
+ h += '<div class="note warn">這是治療模式建議，不是已核准的個人醫囑；使用前仍需核對院內藥品濃度、仿單、交互作用、禁忌與實際病況。</div>';
+ $('result').innerHTML = h;
+ $('printSummary').innerHTML = '<h2>病人資料摘要</h2><p>年齡 ' + s.age + ' 歲；體重 ' + (s.weight ?? '未填') + ' kg；eGFR ' + (s.egfr ?? '未知') + '；疼痛類型：' + esc(R.causeLabel) + '；功能目標：' + esc(s.goal) + '</p><p>勾選風險：' + (flagsOn.length ? esc(flagsOn.join('、')) : '無') + '</p>';
+ last = '疼痛等級：' + R.sevLabel + '（NRS ' + R.n + '/10）｜' + R.causeLabel + '｜目標：' + s.goal +
+  '\n年齡 ' + s.age + ' 歲、體重 ' + (s.weight ?? '未填') + ' kg、eGFR ' + (s.egfr ?? '未知') + '\n勾選風險：' + (flagsOn.length ? flagsOn.join('、') : '無') +
+  (R.adult && R.n > 0 ? '\nNSAID：' + CHIP[R.nsaid][1].split('：')[1] + '｜Morphine：' + (R.morphineAvoid?'避免':'可用') + '｜Paracetamol 每日上限 ' + R.para.maxG + ' g' : '') +
+  '\n【警示】\n' + (R.warnings.length ? R.warnings.map(x => '• ' + x).join('\n') : '• 無') +
+  (R.causeNotes.length ? '\n【病因重點】\n' + R.causeNotes.map(x => '• ' + x).join('\n') : '') +
+  '\n【治療路徑】\n' + R.tiers.map(t => t.title + '\n' + t.items.map(x => '• ' + x).join('\n')).join('\n') +
+  (R.doses.length ? '\n【成人起始劑量參考】\n' + R.doses.map(d => '• ' + d.drug + '：' + d.dose + '（' + d.note + '）').join('\n') : '') +
+  (R.avoid.length ? '\n【避免】\n' + R.avoid.map(x => '• ' + x).join('\n') : '') +
+  '\n【複評】\n' + R.reassess.map(x => '• ' + x).join('\n');
+ updateRepeat();
 }
-if(n>=7)safe.push('重度疼痛：初次治療後約 15 分鐘複評。');else if(n>=4)safe.push('中度疼痛：約 15–30 分鐘複評。');else safe.push('輕度疼痛：約 30–60 分鐘複評。');
-safe.push('IV／IN／吸入／SL 後通常約 15 分鐘複評；口服約 30 分鐘起依預期藥效及臨床反應複評。');
-safe.push('評估疼痛分數、功能、意識、呼吸、血壓與副作用；opioid 給藥時須備妥 naloxone。');
-safe.push('無效時重新檢查病因與安全性，再考慮滴定或加上不同作用機轉；避免雙 NSAIDs 與無計畫的 opioid 疊加。');
-const block=(name,items)=>'<h3>'+name+'</h3><ul>'+items.map(x=>'<li>'+x+'</li>').join('')+'</ul>';
-last='疼痛等級：'+severity+'（NRS '+n+'/10）\n年齡 '+age+'歲、體重 '+wt+'kg、eGFR '+egfr+'、透析：'+(ck('dialysis')?'是':'否')+'\n'+[...w,...a,...safe].map(x=>'• '+x).join('\n');
-$('result').innerHTML='<h2>個人化治療決策：'+severity+'（NRS '+n+'/10）</h2>'+(w.length?'<div class="note danger">'+block('風險及安全警示',w)+'</div>':'<div class="note ok">未勾選額外高危險警示，仍須由醫師完整評估。</div>')+block('建議治療路徑',a)+block('複評／升降階規則',safe)+'<div class="note warn">這是治療模式建議，不是已核准的個人醫囑；使用前仍需核對院內藥品濃度、仿單、交互作用、禁忌與實際病況。</div>';
-updateRepeat();}
-function updateRepeat(){const value=$('repeat').value;if(value===''||!last){$('followup').textContent='請先產生建議並輸入複評分數。';return}const v=Number(value),b=num('nrs');if(v<0||v>10){$('followup').textContent='複評 NRS 應為 0–10';return}const d=b-v,p=b>0?Math.round(d/b*100):0;$('followup').textContent='初始 NRS '+b+' → 複評 '+v+'；改善 '+d+' 分'+(b>0?'（'+p+'%）':'')+'。請結合功能目標、用藥時間、呼吸／意識與副作用判讀。'}
-$('generate').addEventListener('click',render);$('reset').addEventListener('click',()=>location.reload());$('repeat').addEventListener('input',updateRepeat);$('copy').addEventListener('click',async()=>{if(!last){alert('請先產生治療建議');return}const t=last+'\n複評：'+$('followup').textContent+'\n處置備註：'+$('notes').value;try{await navigator.clipboard.writeText(t);alert('已複製摘要')}catch(e){prompt('請複製摘要',t)}});
+function updateRepeat(){
+ const value = $('repeat').value;
+ if (value === '' || !last || !R || R.errors){ $('followup').className='note'; $('followup').textContent = '請先產生建議並輸入複評分數。'; return; }
+ const F = PAIN.followup(R.n, Number(value), $('route').value);
+ const cls = {relieved:'ok', partial:'warn', notRelieved:'danger', worse:'danger', none:'ok'}[F.status];
+ $('followup').className = 'note ' + cls;
+ $('followup').textContent = '初始 NRS ' + R.n + ' → 複評 ' + value + '；改善 ' + F.d + ' 分' + (F.pct !== null ? '（' + F.pct + '%）' : '') + '。' + F.action +
+  (F.next ? ' 下次複評：約 ' + F.next + ' 分鐘後（依給藥途徑）。' : ' 請選擇給藥途徑以決定下次複評時間。');
+}
+$('generate').addEventListener('click', render);
+$('reset').addEventListener('click', () => location.reload());
+$('print').addEventListener('click', () => { if (!generated) render(); window.print(); });
+document.querySelectorAll('[data-case]').forEach(b => b.addEventListener('click', () => loadCase(b.dataset.case)));
+document.querySelectorAll('.input-area input, .input-area select').forEach(el => {
+ if (['repeat','route','notes'].includes(el.id)) return;
+ el.addEventListener(el.type === 'number' ? 'input' : 'change', () => { if (generated) render(); });
+});
+$('repeat').addEventListener('change', updateRepeat); $('route').addEventListener('change', updateRepeat);
+$('copy').addEventListener('click', async () => {
+ if (!last){ alert('請先產生治療建議'); return; }
+ const t = last + '\n【複評】' + $('followup').textContent + '\n【處置備註】' + ($('notes').value || '無');
+ try { await navigator.clipboard.writeText(t); alert('已複製摘要'); } catch(e){ prompt('請複製摘要', t); }
+});
 </script></body></html>

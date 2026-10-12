@@ -1,0 +1,106 @@
+// Rule tests for the decision engine embedded in index.html.
+// Run: node tests.cjs
+const fs = require('fs');
+const path = require('path');
+const assert = require('assert');
+
+const html = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
+const m = html.match(/\/\*ENGINE-START\*\/([\s\S]*?)\/\*ENGINE-END\*\//);
+if (!m) throw new Error('engine block not found');
+const mod = { exports: {} };
+new Function('module', m[1])(mod);
+const P = mod.exports;
+
+let pass = 0, fail = 0;
+function t(name, fn) {
+  try { fn(); pass++; console.log('  ✓ ' + name); }
+  catch (e) { fail++; console.log('  ✗ ' + name + '\n    ' + e.message); }
+}
+const BASE = { age: 40, weight: 70, egfr: 100, nrs: 5, cause: 'other', goal: '疼痛明顯下降', flags: {} };
+const ev = (o = {}) => P.evaluate(Object.assign({}, BASE, o, { flags: Object.assign({}, o.flags || {}) }));
+const all = r => [].concat(r.warnings, r.causeNotes, r.avoid, r.reassess, ...r.tiers.map(x => x.items), r.doses.map(d => d.drug + d.dose + d.note)).join('\n');
+const tierKeys = r => r.tiers.map(x => x.key);
+
+console.log('Input validation');
+t('blank age → error (was silently treated as a child)', () => assert.ok(ev({ age: null }).errors));
+t('blank eGFR → unknown, NOT renal failure', () => { const r = ev({ egfr: null }); assert.equal(r.errors, null); assert.equal(r.renalSevere, false); assert.equal(r.egfrUnknown, true); assert.equal(r.nsaid, 'caution'); });
+t('blank weight allowed', () => assert.equal(ev({ weight: null }).errors, null));
+t('negative weight → error', () => assert.ok(ev({ weight: -3 }).errors));
+t('NRS 11 → error', () => assert.ok(ev({ nrs: 11 }).errors));
+
+console.log('Severity bands (EUSEM Figure 8.2)');
+t('0 none, 3 mild, 4 moderate, 6 moderate, 7 severe', () => {
+  assert.deepEqual([0, 1, 3, 4, 6, 7, 10].map(P.sevOf), ['none', 'mild', 'mild', 'moderate', 'moderate', 'severe', 'severe']);
+});
+t('tiers stack by severity', () => {
+  assert.deepEqual(tierKeys(ev({ nrs: 2 })), ['mild']);
+  assert.deepEqual(tierKeys(ev({ nrs: 5 })), ['mild', 'moderate']);
+  assert.deepEqual(tierKeys(ev({ nrs: 8 })), ['mild', 'moderate', 'severe']);
+});
+t('NRS 0 → no drug tiers, no doses', () => { const r = ev({ nrs: 0 }); assert.deepEqual(tierKeys(r), ['none']); assert.equal(r.doses.length, 0); });
+
+console.log('NSAID gating');
+t('healthy adult → ok', () => assert.equal(ev().nsaid, 'ok'));
+['aki', 'dialysis', 'bleed', 'liver', 'heart', 'dehydrated', 'pregnant', 'nsaidAllergy', 'nsaid'].forEach(k =>
+  t(k + ' → avoid', () => assert.equal(ev({ flags: { [k]: true } }).nsaid, 'avoid')));
+t('liver → avoid (was recommended despite liver warning)', () => assert.ok(!/可依病因考慮單一 NSAID|外用或口服 NSAID（例如/.test(all(ev({ flags: { liver: true } })))));
+t('eGFR 25 → avoid', () => assert.equal(ev({ egfr: 25 }).nsaid, 'avoid'));
+t('eGFR 45 → caution, not plain ok', () => assert.equal(ev({ egfr: 45 }).nsaid, 'caution'));
+t('age 70 → caution', () => assert.equal(ev({ age: 70 }).nsaid, 'caution'));
+t('IV ketorolac offered only when NSAID not avoided', () => {
+  assert.ok(/IV ketorolac/.test(all(ev({ nrs: 5 }))));
+  assert.ok(!/IV ketorolac/.test(all(ev({ nrs: 5, flags: { bleed: true } }))));
+});
+
+console.log('Opioid / ketamine choice');
+t('severe healthy → IV morphine first-choice + dose row', () => { const r = ev({ nrs: 8 }); assert.ok(/IV morphine 為首選/.test(all(r))); assert.ok(r.doses.some(d => d.drug === 'Morphine IV')); });
+t('dialysis → morphine avoided, fentanyl preferred, no morphine dose row', () => {
+  const r = ev({ nrs: 9, flags: { dialysis: true }, egfr: 5 });
+  assert.equal(r.morphineAvoid, true); assert.ok(/fentanyl 為主要 opioid/.test(all(r)));
+  assert.ok(!r.doses.some(d => d.drug === 'Morphine IV'));
+});
+t('AKI alone → morphine avoided', () => assert.equal(ev({ flags: { aki: true } }).morphineAvoid, true));
+t('eGFR 45 → morphine not auto-avoided', () => assert.equal(ev({ egfr: 45 }).morphineAvoid, false));
+t('pregnancy → ketamine avoided and no ketamine dose', () => { const r = ev({ nrs: 8, flags: { pregnant: true } }); assert.equal(r.ketamineAvoid, true); assert.ok(!r.doses.some(d => d.drug === 'Ketamine')); });
+t('ketamine weight-based mg shown', () => { const k = ev({ nrs: 8, weight: 80 }).doses.find(d => d.drug === 'Ketamine'); assert.ok(/8 mg/.test(k.dose) && /56 mg/.test(k.dose)); });
+t('fentanyl 50 μg start / max 200 μg', () => { const f = ev({ nrs: 8 }).doses.find(d => /Fentanyl/.test(d.drug)); assert.ok(/50 μg/.test(f.dose) && /200 μg/.test(f.note)); });
+t('back pain severe → opioid not first-line message', () => assert.ok(/opioid 不作首選/.test(all(ev({ nrs: 8, cause: 'back' })))));
+t('fracture severe → no "opioid not first" message', () => assert.ok(!/此類疼痛 opioid 不作首選/.test(all(ev({ nrs: 8, cause: 'fracture' })))));
+t('codeine/tramadol listed as not recommended for adults', () => assert.ok(/Codeine、tramadol、oxycodone/.test(all(ev({ nrs: 5 })))));
+
+console.log('Paracetamol limits');
+t('70 kg → 4 g', () => assert.equal(ev().para.maxG, 4));
+t('48 kg → 15 mg/kg (720 mg), max 2.9 g', () => { const p = ev({ weight: 48 }).para; assert.ok(/720 mg/.test(p.dose)); assert.equal(p.maxG, 2.9); });
+t('liver → 2 g', () => assert.equal(ev({ flags: { liver: true } }).para.maxG, 2));
+t('dehydrated → 3 g', () => assert.equal(ev({ flags: { dehydrated: true } }).para.maxG, 3));
+t('weight unknown → warn to confirm ≥50 kg', () => assert.ok(/未填體重/.test(all(ev({ weight: null })))));
+
+console.log('Populations');
+t('child 10 y → no adult doses, codeine contraindicated', () => { const r = ev({ age: 10, nrs: 8 }); assert.equal(r.child, true); assert.equal(r.doses.length, 0); assert.ok(/Codeine 禁用於兒童/.test(all(r))); });
+t('age 16 → adult', () => assert.equal(ev({ age: 16 }).adult, true));
+t('infant → out of scope', () => { const r = ev({ age: 0.5, nrs: 6 }); assert.equal(r.infant, true); assert.equal(r.doses.length, 0); });
+t('major trauma adult → NICE NG39 IV morphine first-line', () => assert.ok(/NICE NG39/.test(all(ev({ nrs: 8, flags: { majortrauma: true } })))));
+t('major trauma → nitrous oxide warning', () => assert.ok(/禁用 nitrous oxide/.test(all(ev({ nrs: 5, flags: { majortrauma: true } })))));
+t('renal colic → NSAID preferred note', () => assert.ok(/NSAID 優於 opioid/.test(all(ev({ cause: 'renal' })))));
+
+console.log('Reassessment (EUSEM Figure 8.1 / ch.3)');
+t('severe → 15 min', () => assert.ok(/15 分鐘第一次複評/.test(ev({ nrs: 8 }).reassess[0])));
+t('mild → 30–60 min', () => assert.ok(/30–60/.test(ev({ nrs: 2 }).reassess[0])));
+t('8 → 3 = 63% & mild → relieved', () => assert.equal(P.followup(8, 3, 'iv').status, 'relieved'));
+t('8 → 5 = 38% → partial', () => assert.equal(P.followup(8, 5, 'iv').status, 'partial'));
+t('8 → 7 = 13% → not relieved', () => assert.equal(P.followup(8, 7, 'iv').status, 'notRelieved'));
+t('6 → 8 → worse', () => assert.equal(P.followup(6, 8, 'po').status, 'worse'));
+t('PO next check 30 min, IV 15 min', () => { assert.equal(P.followup(6, 5, 'po').next, 30); assert.equal(P.followup(6, 5, 'iv').next, 15); });
+
+console.log('Demo cases');
+t('Case B (dialysis hip fracture) matches teaching text', () => {
+  const r = ev({ age: 68, weight: 60, egfr: 5, nrs: 9, cause: 'fracture', flags: { dialysis: true } });
+  assert.equal(r.nsaid, 'avoid'); assert.equal(r.morphineAvoid, true); assert.ok(/fascia iliaca/.test(all(r)));
+});
+t('Case C (83 y, 48 kg, GI bleed) matches teaching text', () => {
+  const r = ev({ age: 83, weight: 48, egfr: 38, nrs: 6, cause: 'muscle', flags: { bleed: true } });
+  assert.equal(r.sev, 'moderate'); assert.equal(r.nsaid, 'avoid'); assert.equal(r.para.maxG, 2.9);
+});
+
+console.log(`\n${pass} passed, ${fail} failed`);
+process.exit(fail ? 1 : 0);
