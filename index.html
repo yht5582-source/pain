@@ -7,6 +7,13 @@
 <header><h1>急診急性疼痛｜互動治療決策導航</h1><p>EUSEM 2025 × ACEP × NICE｜評估 → 安全篩選 → 多模式止痛 → 複評</p></header>
 <main>
 <div class="note warn"><strong>臨床決策輔助原型，不可直接作為醫囑。</strong> 建議需由醫師評估病因、生命徵象、過敏及院內藥品仿單。兒童、懷孕、重大創傷、程序性鎮靜應遵循專用流程。本網站不儲存或傳送個人資料，請勿輸入病人姓名或身分證字號。</div>
+<section class="input-area" id="demoCases"><span class="step">示範教學</span><h2>三組臨床示範病例｜一鍵帶入</h2>
+<p class="muted">所有資料均為虛構教學情境。點選案例後自動填入資料並生成分析，請觀察哪些藥物選項被限制、為什麼限制，以及複評時間。</p>
+<div class="grid">
+<div class="panel" style="margin:0"><h3>案例 A｜一般成人骨折</h3><p>35 歲，70 kg，eGFR 105，橈骨遠端骨折，NRS 8，生命徵象穩定。</p><button type="button" onclick="loadCase('fracture')">載入骨折案例</button></div>
+<div class="panel" style="margin:0"><h3>案例 B｜透析重度疼痛</h3><p>68 歲，60 kg，規律 HD，eGFR 5（僅為示範值），跌倒後髖部骨折，NRS 9。</p><button type="button" onclick="loadCase('dialysis')">載入透析案例</button></div>
+<div class="panel" style="margin:0"><h3>案例 C｜高齡出血風險</h3><p>83 歲，48 kg，eGFR 38，急性膝關節扭傷，NRS 6，近期上消化道出血。</p><button type="button" onclick="loadCase('elder')">載入高齡案例</button></div>
+</div><div id="demoExplanation" class="note">請選擇一組案例。讀取後，下方欄位可自行修改以測試不同情境。</div></section>
 <div class="input-area">
 <section><span class="step">STEP 1</span><h2>危急病因及即時安全檢查</h2>
 <div class="checks">
@@ -49,6 +56,25 @@
 </main>
 <script>
 const $=id=>document.getElementById(id);let last='';
+const cases={
+ fracture:{age:35,weight:70,egfr:105,nrs:8,cause:'fracture',goal:'能配合檢查及治療',flags:[],repeat:4,notes:'示範：固定骨折、評估神經血管狀態；若有移位需復位，視情況採區域阻斷及滴定短效止痛。'},
+ dialysis:{age:68,weight:60,egfr:5,nrs:9,cause:'fracture',goal:'能配合檢查及治療',flags:['dialysis'],repeat:5,notes:'示範：髖部骨折需影像與骨科評估；可考慮髂筋膜阻斷；慎選短效 opioid，監測呼吸與鎮靜。透析患者 eGFR 不用於決定透析需求。'},
+ elder:{age:83,weight:48,egfr:38,nrs:6,cause:'muscle',goal:'能活動或行走',flags:['bleed'],repeat:3,notes:'示範：需排除隱匿骨折、跌倒原因及目前是否持續出血；避免常規全身性 NSAID，檢查低體重 paracetamol 每日上限。'}
+};
+function loadCase(key){
+ const c=cases[key];if(!c)return;
+ ['unstable','redflag','majortrauma','respRisk','aki','dialysis','liver','pregnant','bleed','heart','dehydrated','nsaid','opioid','allergy'].forEach(id=>$(id).checked=c.flags.includes(id));
+ ['age','weight','egfr','nrs','cause','goal'].forEach(id=>$(id).value=c[id]);
+ $('repeat').value=c.repeat;$('notes').value=c.notes;
+ const explain={
+ fracture:'教學觀察：NRS 8 屬重度，可及時止痛並考慮骨折固定與區域神經阻斷；腎功能及出血風險未見預設禁忌，不代表可免除過敏及用藥核對。',
+ dialysis:'教學觀察：CKD／透析警示應顯示避免常規全身性 NSAIDs、morphine 及 codeine；重度疼痛可評估監測下滴定 fentanyl／區域阻斷。透析患者不能憑 eGFR 5 判斷透析充分性。',
+ elder:'教學觀察：NRS 6 屬中度；近期上消化道出血使全身性 NSAIDs 不適當。83 歲且 48 kg 必須重新檢視 paracetamol 劑量上限及跌倒／骨折風險。'
+ };
+ $('demoExplanation').textContent=explain[key];
+ render();$('result').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
 const ck=id=>$(id).checked;const num=id=>Number($(id).value);
 function render(){
 const age=num('age'),wt=num('weight'),egfr=num('egfr'),n=num('nrs');if([age,wt,egfr,n].some(x=>!Number.isFinite(x))||age<0||wt<=0||egfr<0||n<0||n>10){$('result').innerHTML='<div class="note danger">請確認年齡、體重、eGFR 與 NRS 的數值。</div>';return}
