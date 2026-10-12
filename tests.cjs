@@ -75,6 +75,10 @@ t('single dose capped at 750 mg (49.9 kg)', () => assert.ok(/≈ 749 mg q6h/.tes
 t('40 kg → 3 g/day', () => assert.equal(ev({ weight: 40 }).para.maxG, 3));
 t('40 kg + liver → keeps weight-based dose, cap 2 g', () => { const p = ev({ weight: 40, flags: { liver: true } }).para; assert.ok(/600 mg q6h/.test(p.dose)); assert.equal(p.maxG, 2); });
 t('48 kg + dehydrated → 3 g', () => assert.equal(ev({ weight: 48, flags: { dehydrated: true } }).para.maxG, 3));
+t('liver → IV paracetamol contraindicated (Taiwan label), PO only', () => { const r = ev({ nrs: 5, flags: { liver: true } }); assert.equal(r.para.ivContra, true); assert.ok(/PO（IV 禁用）/.test(r.doses[0].drug)); assert.ok(/緩熱痛）：重度肝功能不全/.test(all(r))); assert.ok(!/IV paracetamol（無法口服/.test(all(r))); });
+t('liver warning states EUSEM vs Taiwan label disagreement', () => assert.ok(/兩者不一致/.test(all(ev({ flags: { liver: true } })))));
+t('eGFR 30 / dialysis / AKI → paracetamol renal adjustment', () => { [{ egfr: 30 }, { egfr: 5, flags: { dialysis: true } }, { flags: { aki: true } }].forEach(o => assert.equal(ev(o).para.renalAdjust, true)); assert.ok(/延長給藥間隔/.test(all(ev({ egfr: 25 })))); });
+t('eGFR 31 → no paracetamol renal adjustment', () => assert.equal(ev({ egfr: 31 }).para.renalAdjust, false));
 t('combination products reminder', () => assert.ok(/複方/.test(ev().para.why)));
 t('liver → 2 g', () => assert.equal(ev({ flags: { liver: true } }).para.maxG, 2));
 t('dehydrated → 3 g', () => assert.equal(ev({ flags: { dehydrated: true } }).para.maxG, 3));

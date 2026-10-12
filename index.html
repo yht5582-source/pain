@@ -52,7 +52,7 @@
 <h3>相關風險與禁忌（可複選）</h3><div class="checks">
 <label><input type="checkbox" id="aki">目前 AKI</label>
 <label><input type="checkbox" id="dialysis">血液或腹膜透析</label>
-<label><input type="checkbox" id="liver">嚴重肝病／肝硬化</label>
+<label><input type="checkbox" id="liver">重度肝功能不全／重度活動性肝病（含失代償肝硬化）</label>
 <label><input type="checkbox" id="pregnant">懷孕／可能懷孕</label>
 <label><input type="checkbox" id="bleed">消化道出血／活動性潰瘍／高出血風險</label>
 <label><input type="checkbox" id="heart">心衰竭、嚴重心血管疾病或體液滯留</label>
@@ -83,7 +83,7 @@ var PAIN = (function () {
   var CAUSE_LABEL = { muscle: '肌肉骨骼／扭傷（非骨折）', fracture: '骨折／創傷', back: '急性腰背痛', renal: '腎絞痛／泌尿系統', abdominal: '腹痛（原因待查）', headache: '頭痛', dental: '牙痛', neuropathic: '神經病變性疼痛', other: '其他／不明' };
   // EUSEM 2025 ch.7 / ACEP 2020: opioids are not first-line for these presentations
   var OPIOID_NOT_FIRST = { muscle: 1, back: 1, headache: 1, dental: 1 };
-  var FLAG_LABEL = { unstable: '血流動力／意識／呼吸不穩', redflag: '危急病因疑慮', majortrauma: '重大創傷', respRisk: '呼吸抑制風險', aki: 'AKI', dialysis: '透析', liver: '嚴重肝病', pregnant: '懷孕／可能懷孕', bleed: '出血／潰瘍風險', heart: '心衰竭／嚴重心血管病', dehydrated: '脫水', nsaidAllergy: 'NSAID 過敏／誘發氣喘', nsaid: '已用 NSAID', opioid: '近期已用 opioid', allergy: '過敏／用藥史未確認' };
+  var FLAG_LABEL = { unstable: '血流動力／意識／呼吸不穩', redflag: '危急病因疑慮', majortrauma: '重大創傷', respRisk: '呼吸抑制風險', aki: 'AKI', dialysis: '透析', liver: '重度肝功能不全／活動性肝病', pregnant: '懷孕／可能懷孕', bleed: '出血／潰瘍風險', heart: '心衰竭／嚴重心血管病', dehydrated: '脫水', nsaidAllergy: 'NSAID 過敏／誘發氣喘', nsaid: '已用 NSAID', opioid: '近期已用 opioid', allergy: '過敏／用藥史未確認' };
 
   function sevOf(n) { return n >= 7 ? 'severe' : n >= 4 ? 'moderate' : n >= 1 ? 'mild' : 'none'; }
   function isNum(x) { return typeof x === 'number' && isFinite(x); }
@@ -105,10 +105,14 @@ var PAIN = (function () {
       why.push(isNum(wt) ? '一般成人：每日 ≤4 g，連續 ≤3 天（EUSEM 第 8 章）' : '體重未填：若 <50 kg 需改依體重計算');
     }
     if (f.dehydrated && maxG > 3) { maxG = 3; why.push('脫水為肝毒性風險因子：每日 ≤3 g（歐洲 IV paracetamol 仿單）'); }
-    if (f.liver && maxG > 2) { maxG = 2; why.push('嚴重肝病：每日 ≤2 g（EUSEM 第 7 章）'); }
+    if (f.liver && maxG > 2) { maxG = 2; why.push('重度肝病：IV 禁用（台灣仿單）；EUSEM 第 7 章口服每日 ≤2 g'); }
     if (f.liver && !low) dose = '每次 ≤1 g（分次）';
+    // Taiwan label (緩熱痛): contraindicated in severe hepatic impairment / severe active liver disease;
+    // CrCl ≤30 mL/min may need a longer dosing interval and a lower daily total.
+    var renalAdjust = !!(f.dialysis || f.aki || (isNum(s.egfr) && s.egfr <= 30));
+    if (renalAdjust) why.push('重度腎功能不全（CrCl ≤30）：延長給藥間隔並降低每日總量（台灣仿單）');
     why.push('總量須加總所有途徑及含 acetaminophen 的複方');
-    return { dose: dose, maxG: maxG, why: why.join('；'), needWeight: !isNum(wt) };
+    return { dose: dose, maxG: maxG, why: why.join('；'), needWeight: !isNum(wt), ivContra: !!f.liver, renalAdjust: renalAdjust };
   }
 
   function evaluate(s) {
@@ -134,7 +138,7 @@ var PAIN = (function () {
     if (f.dialysis) nsAvoid.push('透析');
     else if (isNum(egfr) && egfr < 30) nsAvoid.push('eGFR <30');
     if (f.bleed) nsAvoid.push('消化道出血／潰瘍／高出血風險');
-    if (f.liver) nsAvoid.push('嚴重肝病');
+    if (f.liver) nsAvoid.push('重度肝病');
     if (f.heart) nsAvoid.push('心衰竭／嚴重心血管病／體液滯留');
     if (f.dehydrated) nsAvoid.push('脫水／低血容量');
     if (f.pregnant) nsAvoid.push('懷孕（≥20 週及第三孕期避免）');
@@ -159,7 +163,8 @@ var PAIN = (function () {
     if (f.allergy) warnings.push('尚未確認過敏史／用藥史：先核對後再執行處方。');
     if (f.respRisk || older) warnings.push('鎮靜／呼吸抑制風險上升：opioid 或鎮靜藥需較低起始劑量、滴定與呼吸監測；避免與 benzodiazepine 疊加。');
     if (f.pregnant) warnings.push('妊娠：paracetamol 為首選；NSAIDs 於約 20 週後與第三孕期避免；ketamine 避免；短期 opioid 可於監測下使用但生產時避免；需會同產科評估。');
-    if (f.liver) warnings.push('嚴重肝病：paracetamol 每日 ≤2 g；避免 NSAIDs；所有 opioid 需降低劑量與給藥頻率；ketamine 考慮減量。');
+    if (f.liver) warnings.push('重度肝功能不全／重度活動性肝病：IV paracetamol（緩熱痛）依台灣仿單禁用；EUSEM 第 7 章認為口服 paracetamol 每日 ≤2 g 仍可使用——兩者不一致，須依實際產品仿單並會同肝膽科判斷。避免 NSAIDs；所有 opioid 需降低劑量與給藥頻率；ketamine 考慮減量。');
+    if (para.renalAdjust && adult && n > 0) warnings.push('重度腎功能不全（CrCl ≤30 mL/min' + (f.aki ? '；AKI 時 eGFR 不準，請以臨床判斷' : '') + '）：paracetamol 需延長給藥間隔並降低每日總量（台灣仿單）。');
     if (f.opioid) warnings.push('近期已使用 opioid：計算先前劑量及給藥時間，避免重複疊加；IV opioid 不可與另一種 IV opioid 併用。');
     if (f.nsaid) warnings.push('已使用 NSAID：勿再追加第二種 NSAID（例如已用 ibuprofen，不再給 ketorolac／diclofenac）。');
     if (renalSevere) warnings.push('AKI／eGFR <30／透析：避免 NSAIDs、morphine、codeine；opioid 僅在其他方式無法控制時使用，優先由有經驗者滴定短效 fentanyl 並監測呼吸。');
@@ -200,7 +205,8 @@ var PAIN = (function () {
 
       if (n >= 4) {
         var mod = ['在輕度方案上加入「不同機轉或不同途徑」的藥物，而非只加大同類劑量。'];
-        mod.push('IV paracetamol（無法口服或需較快起效時；同一 24 小時總量合併計算）。');
+        if (para.ivContra) mod.push('IV paracetamol（緩熱痛）：重度肝功能不全／活動性肝病禁用（台灣仿單），改用其他類別。');
+        else mod.push('IV paracetamol（無法口服或需較快起效時；同一 24 小時總量合併計算' + (para.renalAdjust ? '；CrCl ≤30 需延長間隔、降低總量' : '') + '）。');
         if (nsaid !== 'avoid') mod.push('IV ketorolac（若尚未使用其他 NSAID；與口服 NSAID 不可併用）。');
         mod.push('吸入 nitrous oxide 或 methoxyflurane 作為等待期橋接（若院內可取得；' + (f.unstable || f.majortrauma ? '本例有意識／外傷禁忌，避免 nitrous oxide' : '頭部外傷、意識改變、氣胸、中耳炎、潛水減壓病禁用 nitrous oxide') + '）。');
         mod.push('外用 lidocaine（表淺傷口或局部疼痛）。');
@@ -224,7 +230,7 @@ var PAIN = (function () {
 
     // ---- adult dose reference (EUSEM 2025 ch.8 "Dosing considerations for adults") ----
     if (adult && n > 0) {
-      doses.push({ drug: 'Paracetamol PO／IV', dose: para.dose, note: '每日上限 ' + para.maxG + ' g；' + para.why });
+      doses.push({ drug: para.ivContra ? 'Paracetamol PO（IV 禁用）' : 'Paracetamol PO／IV', dose: para.dose, note: '每日上限 ' + para.maxG + ' g；' + para.why });
       if (n >= 4 && !ketamineAvoid) {
         var k = isNum(wt) ? '（' + r1(wt * 0.1) + ' mg）' : '', kin = isNum(wt) ? '（' + r1(wt * 0.7) + ' mg）' : '';
         doses.push({ drug: 'Ketamine', dose: 'IV 0.1 mg/kg' + k + '；IN 0.7 mg/kg' + kin, note: 'IV 重複間隔 ≥10 分鐘；IN 追加 0.3–0.5 mg/kg 間隔 ≥15 分鐘。注意唾液分泌與氣道。' + (f.liver ? '肝病考慮減量。' : '') });
@@ -243,6 +249,7 @@ var PAIN = (function () {
       if (morphineAvoid) avoid.push('Morphine、codeine（腎功能嚴重受損，活性代謝物蓄積）。');
       if (ketamineAvoid) avoid.push('Ketamine（妊娠）。');
       if (nsaid === 'avoid') avoid.push('全身性 NSAIDs：' + nsAvoid.join('、') + '。');
+      if (adult && para.ivContra) avoid.push('IV paracetamol（緩熱痛）：重度肝功能不全／重度活動性肝病禁用（台灣仿單）。');
     }
 
     // ---- reassessment (EUSEM Figure 8.1) ----
@@ -317,7 +324,7 @@ function render(){
  if (R.errors){ $('result').innerHTML = '<h2>治療方案</h2><div class="note danger">' + list(R.errors) + '</div>'; last=''; updateRepeat(); return; }
  const flagsOn = FLAGS.filter(id => s.flags[id]).map(id => PAIN.FLAG_LABEL[id]);
  let chips = '<span class="chip info">' + esc(R.causeLabel) + '</span>';
- if (R.adult && R.n > 0) chips += '<span class="chip ' + CHIP[R.nsaid][0] + '">' + CHIP[R.nsaid][1] + '</span>' + '<span class="chip ' + (R.morphineAvoid?'avoid':'ok') + '">Morphine：' + (R.morphineAvoid?'避免':'可用') + '</span>' + '<span class="chip ' + (R.ketamineAvoid?'avoid':'ok') + '">Ketamine：' + (R.ketamineAvoid?'避免':'可用') + '</span>' + '<span class="chip info">Paracetamol ≤' + R.para.maxG + ' g/日</span>';
+ if (R.adult && R.n > 0) chips += '<span class="chip ' + CHIP[R.nsaid][0] + '">' + CHIP[R.nsaid][1] + '</span>' + '<span class="chip ' + (R.morphineAvoid?'avoid':'ok') + '">Morphine：' + (R.morphineAvoid?'避免':'可用') + '</span>' + '<span class="chip ' + (R.ketamineAvoid?'avoid':'ok') + '">Ketamine：' + (R.ketamineAvoid?'避免':'可用') + '</span>' + '<span class="chip ' + (R.para.ivContra||R.para.renalAdjust?'caution':'info') + '">Paracetamol ' + (R.para.ivContra ? 'IV 禁用・PO ' : '') + '≤' + R.para.maxG + ' g/日' + (R.para.renalAdjust ? '・腎功能需減量' : '') + '</span>';
  let h = '<h2>個人化治療決策：' + R.sevLabel + '（NRS ' + R.n + '/10）</h2><div>' + chips + '</div>';
  h += R.warnings.length ? '<div class="note danger"><h3>風險及安全警示</h3>' + list(R.warnings) + '</div>' : '<div class="note ok">未勾選額外高危險警示，仍須由醫師完整評估。</div>';
  if (R.causeNotes.length) h += '<h3>病因導向重點</h3>' + list(R.causeNotes);
@@ -330,7 +337,7 @@ function render(){
  $('printSummary').innerHTML = '<h2>病人資料摘要</h2><p>年齡 ' + s.age + ' 歲；體重 ' + (s.weight ?? '未填') + ' kg；eGFR ' + (s.egfr ?? '未知') + '；疼痛類型：' + esc(R.causeLabel) + '；功能目標：' + esc(s.goal) + '</p><p>勾選風險：' + (flagsOn.length ? esc(flagsOn.join('、')) : '無') + '</p>';
  last = '疼痛等級：' + R.sevLabel + '（NRS ' + R.n + '/10）｜' + R.causeLabel + '｜目標：' + s.goal +
   '\n年齡 ' + s.age + ' 歲、體重 ' + (s.weight ?? '未填') + ' kg、eGFR ' + (s.egfr ?? '未知') + '\n勾選風險：' + (flagsOn.length ? flagsOn.join('、') : '無') +
-  (R.adult && R.n > 0 ? '\nNSAID：' + CHIP[R.nsaid][1].split('：')[1] + '｜Morphine：' + (R.morphineAvoid?'避免':'可用') + '｜Paracetamol 每日上限 ' + R.para.maxG + ' g' : '') +
+  (R.adult && R.n > 0 ? '\nNSAID：' + CHIP[R.nsaid][1].split('：')[1] + '｜Morphine：' + (R.morphineAvoid?'避免':'可用') + '｜Paracetamol 每日上限 ' + R.para.maxG + ' g' + (R.para.ivContra ? '（IV 禁用）' : '') + (R.para.renalAdjust ? '（CrCl ≤30 需延長間隔、減量）' : '') : '') +
   '\n【警示】\n' + (R.warnings.length ? R.warnings.map(x => '• ' + x).join('\n') : '• 無') +
   (R.causeNotes.length ? '\n【病因重點】\n' + R.causeNotes.map(x => '• ' + x).join('\n') : '') +
   '\n【治療路徑】\n' + R.tiers.map(t => t.title + '\n' + t.items.map(x => '• ' + x).join('\n')).join('\n') +
