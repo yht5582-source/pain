@@ -27,10 +27,20 @@
 <label class="field">年齡（歲）<input id="age" type="number" min="0" max="120" value="60"></label>
 <label class="field">體重（kg）<input id="weight" type="number" min="1" max="300" value="65"></label>
 <label class="field">eGFR（mL/min/1.73m²）<input id="egfr" type="number" min="0" max="150" value="75"></label>
-<label class="field">疼痛程度 NRS（0–10）<input id="nrs" type="number" min="0" max="10" value="6"></label>
+<label class="field">初始疼痛 NRS（0–10）<select id="nrs" aria-label="初始 NRS"><option value="0">0 分｜完全不痛</option><option value="1">1 分｜極輕微疼痛</option><option value="2">2 分｜輕微、可察覺</option><option value="3">3 分｜輕度、略感困擾</option><option value="4">4 分｜中度疼痛</option><option value="5">5 分｜中度疼痛</option><option value="6" selected>6 分｜中度、較難忽略</option><option value="7">7 分｜重度疼痛</option><option value="8">8 分｜重度疼痛</option><option value="9">9 分｜極重度疼痛</option><option value="10">10 分｜可想像的最劇烈疼痛</option></select></label>
 <label class="field">疼痛類型<select id="cause"><option value="muscle">肌肉骨骼／扭傷</option><option value="fracture">骨折／創傷</option><option value="renal">腎絞痛／泌尿系統</option><option value="abdominal">腹痛（原因待查）</option><option value="headache">頭痛</option><option value="neuropathic">神經病變性疼痛</option><option value="other">其他／不明</option></select></label>
 <label class="field">病人期望／功能目標<select id="goal"><option>能配合檢查及治療</option><option>能活動或行走</option><option>能休息及睡眠</option><option>疼痛明顯下降</option></select></label>
 </div>
+<div class="note" id="nrsGuide"><h3 style="margin-top:0">疼痛評分怎麼選？（NRS-11）</h3>
+<p><strong>請直接詢問病人：</strong>「0 分表示完全不痛，10 分是您能想像最劇烈的疼痛。您現在的疼痛是幾分？」以病人自述為準，不能單靠心率、表情、疾病名稱或醫護觀察指定分數。</p>
+<div class="grid">
+<div><strong>0 分：無痛</strong><p>沒有疼痛。</p></div>
+<div><strong>1–3 分：輕度</strong><p>通常仍能進行日常活動，疼痛較容易忍受。</p></div>
+<div><strong>4–6 分：中度</strong><p>可能影響專注、睡眠或部分活動，通常需要討論止痛。</p></div>
+<div><strong>7–10 分：重度</strong><p>可能顯著干擾活動或休息，需要及時評估與止痛。</p></div></div>
+<p><strong>重要：</strong>上述活動、睡眠敘述僅是協助病人理解的參考，不是逐分的國際驗證切點；例如骨折、腎絞痛或癌症不各自固定對應某個 NRS。NRS 7 分仍屬重度。處置還應考慮病因、功能目標、想不想止痛及禁忌症。</p>
+<p><strong>無法自行報分時：</strong>幼兒可用 FLACC 或 FACES；進階失智且不能溝通時可用 PAINAD；插管重症可依情境使用 CPOT／BPS。這些工具不得直接當作病人自報 NRS。</p>
+<small>資料來源：EUSEM 2025 第 3、8 章；The Joint Commission pain severity 指標（0、1–3、4–6、7–10）。</small></div>
 <h3>相關風險與禁忌（可複選）</h3><div class="checks">
 <label><input type="checkbox" id="aki">目前 AKI</label>
 <label><input type="checkbox" id="dialysis">血液或腹膜透析</label>
@@ -47,7 +57,7 @@
 </div>
 <section id="result" aria-live="polite"><h2>治療方案</h2><p class="muted">請完成資料輸入，再點選「分析並產生建議」。</p></section>
 <section class="input-area"><span class="step">STEP 4</span><h2>疼痛複評與處置摘要</h2>
-<div class="grid"><label class="field">複評 NRS<select id="repeat" aria-label="複評 NRS"><option value="">請選擇複評疼痛程度</option><option value="0">0 分｜無痛</option><option value="1">1 分｜輕度疼痛</option><option value="2">2 分｜輕度疼痛</option><option value="3">3 分｜輕度疼痛</option><option value="4">4 分｜中度疼痛</option><option value="5">5 分｜中度疼痛</option><option value="6">6 分｜中度疼痛</option><option value="7">7 分｜重度疼痛</option><option value="8">8 分｜重度疼痛</option><option value="9">9 分｜重度疼痛</option><option value="10">10 分｜重度疼痛</option></select></label><label class="field">處置備註<textarea id="notes" rows="2" placeholder="藥物、劑量、時間、生命徵象、是否不良反應"></textarea></label></div>
+<div class="grid"><label class="field">複評 NRS<select id="repeat" aria-label="複評 NRS"><option value="">請選擇複評疼痛程度</option><option value="0">0 分｜完全不痛</option><option value="1">1 分｜極輕微疼痛</option><option value="2">2 分｜輕微、可察覺</option><option value="3">3 分｜輕度、略感困擾</option><option value="4">4 分｜中度疼痛</option><option value="5">5 分｜中度疼痛</option><option value="6">6 分｜中度、較難忽略</option><option value="7">7 分｜重度疼痛</option><option value="8">8 分｜重度疼痛</option><option value="9">9 分｜極重度疼痛</option><option value="10">10 分｜可想像的最劇烈疼痛</option></select></label><label class="field">處置備註<textarea id="notes" rows="2" placeholder="藥物、劑量、時間、生命徵象、是否不良反應"></textarea></label></div>
 <button id="copy">複製治療摘要</button><button class="secondary" onclick="window.print()">列印</button>
 <div id="followup" class="note">未輸入複評疼痛分數。</div></section>
 <section><h2>文獻與使用原則</h2><p>本系統使用 EUSEM 2025 的初始評估、疼痛分層、CERTA 多模式止痛與複評原則；參考 ACEP 2020 非 opioid 優先與 NICE NG39 重大創傷止痛建議。藥物具各國核准差異，選用須符合當地仿單與院內規範。</p>
