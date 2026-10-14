@@ -8,11 +8,22 @@
 .chip{display:inline-block;border-radius:99px;padding:3px 11px;font-size:13px;font-weight:700;margin:0 6px 6px 0}.chip.ok{background:#d9f2e3;color:#145a32}.chip.caution{background:#fff1c9;color:#7a5200}.chip.avoid{background:#fde0db;color:#8a2111}.chip.info{background:#dceaf5;color:#173e60}
 .tier{border-left:4px solid #1d5f9d;padding:2px 0 2px 14px;margin:14px 0}.tier.t-mild{border-color:#3d9a62}.tier.t-moderate{border-color:#d49a1c}.tier.t-severe{border-color:#c4462f}.tier h3{margin:4px 0}
 .tbl{width:100%;border-collapse:collapse;font-size:14px;margin:6px 0}.tbl th,.tbl td{border:1px solid #dce5ee;padding:8px;text-align:left;vertical-align:top}.tbl th{background:#f2f6fb}.tblwrap{overflow-x:auto}
+.scale-btns{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 6px}.scale-btns button{margin:0;background:white;color:#173e60;border:1px solid #9fbbd4;padding:9px 14px;text-align:left;line-height:1.3}.scale-btns button small{display:block;font-weight:400;font-size:12px;color:#64778d}.scale-btns button:hover{background:#dceaf5}
+dialog#scaleDlg{overflow:auto;border:0;border-radius:14px;padding:0;width:min(860px,calc(100% - 24px));max-height:calc(100% - 24px);box-shadow:0 12px 40px #0b1f3a55;color:#17263b}dialog#scaleDlg::backdrop{background:#0b1f3a88}
+.dlg-head{position:sticky;top:0;z-index:2;background:#183252;color:white;padding:14px 18px;display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.dlg-head h2{margin:0;font-size:19px}.dlg-head p{margin:4px 0 0;font-size:13px;color:#cfe1ee}.dlg-head button{margin:0;white-space:nowrap;flex:none;background:#ffffff22;padding:6px 12px}
+.dlg-body{padding:16px 18px}.dlg-foot{position:sticky;bottom:0;z-index:2;background:white;border-top:1px solid #dce5ee;padding:12px 18px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}.dlg-foot button{margin:0}
+.sc-item{border:1px solid #dce5ee;border-radius:10px;padding:10px 12px;margin-bottom:10px}.sc-item h3{margin:0 0 8px;font-size:15px}.sc-item h3 small{font-weight:400}
+.sc-opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px}.sc-opt{margin:0;background:#f6f9fc;color:#17263b;border:1px solid #c9d8e6;font-weight:400;text-align:left;padding:9px 10px;line-height:1.45;font-size:14px}.sc-opt b{display:inline-block;min-width:24px;height:24px;line-height:24px;text-align:center;border-radius:99px;background:#dceaf5;color:#173e60;margin-right:6px;font-size:13px}.sc-opt[aria-pressed=true]{background:#1d5f9d;color:white;border-color:#1d5f9d}.sc-opt[aria-pressed=true] b{background:white}
+.sc-total{font-size:18px;font-weight:800;margin-right:auto}.sc-total small{font-weight:400;font-size:13px;display:block}
+.faces{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}.faces .sc-opt{text-align:center;padding:8px 4px}.faces svg{width:100%;max-width:74px;height:auto;display:block;margin:0 auto 4px}
+.sc-mode{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}.sc-mode button{margin:0}
+#scaleSource:empty{display:none}
+@media(max-width:550px){.faces{grid-template-columns:repeat(3,1fr)}.dlg-body{padding:12px}.sc-opts{grid-template-columns:1fr}}
 #printSummary{display:none}
-@media print{header,button,.input-area,#demoCases,.noprint{display:none!important}#printSummary{display:block}body{background:white}section{box-shadow:none;break-inside:avoid}}
+@media print{dialog,header,button,.input-area,#demoCases,.noprint{display:none!important}#printSummary{display:block}body{background:white}section{box-shadow:none;break-inside:avoid}}
 @media(max-width:550px){main{padding:12px}section{padding:15px}header{padding:22px 16px}header h1{font-size:22px}}
 </style></head><body>
-<header><h1>急診急性疼痛｜互動治療決策導航</h1><p>EUSEM 2025 × ACEP × NICE｜評估 → 安全篩選 → 多模式止痛 → 複評｜v1.1</p></header>
+<header><h1>急診急性疼痛｜互動治療決策導航</h1><p>EUSEM 2025 × ACEP × NICE｜評估 → 安全篩選 → 多模式止痛 → 複評｜v1.2</p></header>
 <main>
 <div class="note warn"><strong>臨床決策輔助原型，不可直接作為醫囑。</strong> 建議需由醫師評估病因、生命徵象、過敏及院內藥品仿單。兒童、懷孕、重大創傷、程序性鎮靜應遵循專用流程。本網站不儲存或傳送個人資料，請勿輸入病人姓名或身分證字號。</div>
 <section class="input-area" id="demoCases"><span class="step">示範教學</span><h2>三組臨床示範病例｜一鍵帶入</h2>
@@ -47,8 +58,18 @@
 <div><strong>4–6 分：中度</strong><p>可能影響專注、睡眠或部分活動，通常需要討論止痛。</p></div>
 <div><strong>7–10 分：重度</strong><p>可能顯著干擾活動或休息，需要及時評估與止痛。</p></div></div>
 <p><strong>重要：</strong>上述活動、睡眠敘述僅是協助病人理解的參考，不是逐分的國際驗證切點；例如骨折、腎絞痛或癌症不各自固定對應某個 NRS。處置還應考慮病因、功能目標、病人是否想要止痛及禁忌症。</p>
-<p><strong>無法自行報分時：</strong>幼兒可用 FLACC 或 FACES；嬰兒可用 CRIES；進階失智且不能溝通時可用 PAINAD；插管重症可依情境使用 CPOT／BPS。這些工具不得直接當作病人自報 NRS。</p>
-<small>資料來源：EUSEM 2025 第 3 章、第 8 章（Figure 8.2：輕度 NRS &lt;4、中度 4–6、重度 7–10）。</small></div>
+<h3>無法自行報 NRS 時：點選開啟評量表</h3>
+<div class="scale-btns" role="group" aria-label="替代疼痛評量表">
+<button type="button" data-scale="FACES">FACES 臉譜量表<small>約 3–4 歲以上兒童，自述</small></button>
+<button type="button" data-scale="FLACC">FLACC<small>幼兒（約 2 個月–7 歲），觀察</small></button>
+<button type="button" data-scale="CRIES">CRIES<small>新生兒／嬰兒，觀察</small></button>
+<button type="button" data-scale="PAINAD">PAINAD<small>進階失智、不能溝通</small></button>
+<button type="button" data-scale="CPOT">CPOT<small>重症（插管／未插管）</small></button>
+<button type="button" data-scale="BPS">BPS／BPS-NI<small>重症（插管／未插管）</small></button>
+</div>
+<p class="muted" style="margin:4px 0">FACES 屬病人自述，可對應 0–10；其餘為行為觀察量表，分數代表「疼痛行為」而非病人自報 NRS，複評時須使用同一量表。</p>
+<div id="scaleSource" class="note ok"></div>
+<small>資料來源：EUSEM 2025 第 3 章、第 8 章（Figure 8.2：輕度 NRS &lt;4、中度 4–6、重度 7–10）；各評量表原始文獻見頁尾。</small></div>
 <h3>相關風險與禁忌（可複選）</h3><div class="checks">
 <label><input type="checkbox" id="aki">目前 AKI</label>
 <label><input type="checkbox" id="dialysis">血液或腹膜透析</label>
@@ -72,10 +93,15 @@
 <label class="field">處置備註<textarea id="notes" rows="2" placeholder="藥物、劑量、時間、生命徵象、是否不良反應"></textarea></label></div>
 <button type="button" id="copy">複製治療摘要</button><button type="button" class="secondary" id="print">列印</button>
 <div id="followup" class="note">請先產生建議並輸入複評分數。</div></section>
-<section><h2>文獻與使用原則</h2><p>本系統使用 EUSEM 2025 的初始評估、疼痛分層（Figure 8.2）、成人／兒童治療選項（Figure 8.3a/b）、特殊族群（第 7 章：腎病、肝病、妊娠、高齡）與複評原則（Figure 8.1）；重大創傷參考 NICE NG39 1.7.4–1.7.6，opioid 使用原則參考 ACEP 2020。藥物具各國核准差異（例如 methoxyflurane、metamizole、SL sufentanil 在台灣未必可取得），選用須符合當地仿單與院內規範。</p>
-<p><a href="https://eusem.org/images/251210_EUSEM_European_Pain_Initiative_Guidelines_Updated_Oct_2025.pdf" target="_blank" rel="noopener">EUSEM 2025 原始手冊</a> · <a href="https://www.acep.org/siteassets/new-pdfs/clinical-policies/opioids-2020.pdf" target="_blank" rel="noopener">ACEP Opioid Policy</a> · <a href="https://www.nice.org.uk/guidance/ng39/chapter/Recommendations" target="_blank" rel="noopener">NICE NG39</a> · <a href="https://www.kidney.org/kidney-topics/pain-medicines-and-kidney-disease" target="_blank" rel="noopener">NKF Kidney Safety</a> · <a href="https://yht5582-source.github.io/Migraine--Headache/" target="_blank" rel="noopener">偏頭痛／頭痛專頁</a></p></section>
-<footer>Version 1.1 | 2026-10-12 | Clinical decision support only. 成人劑量僅列 EUSEM 2025 第 8 章原文起始劑量供核對；體重 <50 kg 的 paracetamol 依台灣仿單；未包含處方自動簽署、兒童體重劑量或完整藥物交互作用資料庫。</footer>
+<section><h2>文獻與使用原則</h2><p>本系統使用 EUSEM 2025 的初始評估、疼痛分層（Figure 8.2）、成人／兒童治療選項（Figure 8.3a/b）、特殊族群（第 7 章：腎病、肝病、妊娠、高齡）與複評原則（Figure 8.1）；重大創傷參考 NICE NG39 1.7.4–1.7.6，opioid 使用原則參考 ACEP 2020。無法自述者的評量表：FLACC（Merkel 1997）、FACES（FPS-R，Hicks 2001；Wong-Baker 1988）、CRIES（Krechel 1995）、PAINAD（Warden 2003）、CPOT（Gélinas 2006）、BPS／BPS-NI（Payen 2001；Chanques 2009），項目為中文意譯、臉譜為本站自繪示意圖。藥物具各國核准差異（例如 methoxyflurane、metamizole、SL sufentanil 在台灣未必可取得），選用須符合當地仿單與院內規範。</p>
+<p><a href="https://eusem.org/images/251210_EUSEM_European_Pain_Initiative_Guidelines_Updated_Oct_2025.pdf" target="_blank" rel="noopener">EUSEM 2025 原始手冊</a> · <a href="https://www.acep.org/siteassets/new-pdfs/clinical-policies/opioids-2020.pdf" target="_blank" rel="noopener">ACEP Opioid Policy</a> · <a href="https://www.nice.org.uk/guidance/ng39/chapter/Recommendations" target="_blank" rel="noopener">NICE NG39</a> · <a href="https://www.kidney.org/kidney-topics/pain-medicines-and-kidney-disease" target="_blank" rel="noopener">NKF Kidney Safety</a> · <a href="https://iasp-pain.org/resources/faces-pain-scale-revised/" target="_blank" rel="noopener">FPS-R（IASP）</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/30113379/" target="_blank" rel="noopener">SCCM PADIS 2018（CPOT／BPS）</a> · <a href="https://yht5582-source.github.io/Migraine--Headache/" target="_blank" rel="noopener">偏頭痛／頭痛專頁</a></p></section>
+<footer>Version 1.2 | 2026-10-14 | Clinical decision support only. 成人劑量僅列 EUSEM 2025 第 8 章原文起始劑量供核對；體重 <50 kg 的 paracetamol 依台灣仿單；未包含處方自動簽署、兒童體重劑量或完整藥物交互作用資料庫。</footer>
 </main>
+<dialog id="scaleDlg" aria-labelledby="scaleTitle">
+<div class="dlg-head"><div><h2 id="scaleTitle"></h2><p id="scaleWho"></p></div><button type="button" id="scaleClose" aria-label="關閉評量表">✕ 關閉</button></div>
+<div class="dlg-body" id="scaleBody"></div>
+<div class="dlg-foot"><div class="sc-total" id="scaleTotal" aria-live="polite"></div><button type="button" id="scaleToInit">帶入初始分級</button><button type="button" class="secondary" id="scaleToRepeat">帶入複評</button><button type="button" class="secondary" id="scaleRecord">記錄至摘要</button><button type="button" class="secondary" id="scaleClear">清除</button></div>
+</dialog>
 <script>
 /*ENGINE-START*/
 var PAIN = (function () {
@@ -284,7 +310,115 @@ var PAIN = (function () {
     return { d: d, pct: pct, status: status, action: action, next: next };
   }
 
-  return { evaluate: evaluate, followup: followup, sevOf: sevOf, FLAG_LABEL: FLAG_LABEL };
+
+  // ---- Pain assessment tools for patients unable to give a self-reported NRS ----
+  // Descriptors are Chinese paraphrases of the published instruments (see refs); each item is [score, text].
+  var SCALES = {
+    FACES: {
+      name: 'FACES 臉譜疼痛量表', who: '約 3–4 歲以上、能理解指認的兒童（FPS-R 驗證 4–12 歲；Wong-Baker FACES ≥3 歲）', kind: 'self', min: 0, max: 10, mapNRS: true,
+      how: '請孩子指認：「這些臉表示疼痛的程度。最左邊表示一點都不痛，越往右越痛，最右邊表示非常非常痛。哪一張臉最像你現在有多痛？」避免使用「開心」「難過」等字眼，以免把情緒與疼痛混淆；分數以孩子的指認為準。',
+      faces: [0, 2, 4, 6, 8, 10],
+      ref: 'Hicks CL et al. Pain 2001;93:173-83（FPS-R）；Wong DL, Baker CM. Pediatr Nurs 1988;14:9-17。下方臉譜為本站自繪示意，非官方授權圖卡。'
+    },
+    FLACC: {
+      name: 'FLACC 行為疼痛量表', who: '幼兒（原始驗證 2 個月–7 歲），無法自述者', kind: 'obs', min: 0, max: 10, mapNRS: true,
+      how: '清醒者觀察 1–5 分鐘：掀開被子看腿與身體、改變姿勢、觸摸身體評估張力，必要時安撫；睡眠者觀察 ≥5 分鐘。每項 0–2 分。',
+      items: [
+        { key: 'face', label: '臉部 Face', opts: [[0, '無特別表情或微笑'], [1, '偶爾皺眉或扭曲表情、退縮、不感興趣'], [2, '經常至持續下巴顫抖、緊咬牙關']] },
+        { key: 'legs', label: '腿部 Legs', opts: [[0, '正常姿勢或放鬆'], [1, '不安、躁動、緊繃'], [2, '踢腿或雙腿屈起']] },
+        { key: 'activity', label: '活動 Activity', opts: [[0, '安靜平躺、姿勢正常、活動自如'], [1, '扭動、身體來回移動、緊繃'], [2, '身體弓起、僵直或抽動']] },
+        { key: 'cry', label: '哭鬧 Cry', opts: [[0, '不哭（醒著或睡著）'], [1, '呻吟或嗚咽，偶爾抱怨'], [2, '持續哭泣、尖叫或啜泣，經常抱怨']] },
+        { key: 'consol', label: '可安撫性 Consolability', opts: [[0, '滿足、放鬆'], [1, '偶爾觸摸、擁抱或說話可安撫，可轉移注意'], [2, '難以安撫或安慰']] }
+      ],
+      ref: 'Merkel SI et al. Pediatr Nurs 1997;23:293-7。FLACC © 2002 The Regents of the University of Michigan.'
+    },
+    CRIES: {
+      name: 'CRIES 新生兒術後疼痛量表', who: '新生兒／嬰兒（原始驗證胎齡 32–60 週，術後疼痛）', kind: 'obs', min: 0, max: 10, mapNRS: false,
+      how: '每項 0–2 分。生命徵象與術前（或平時）基準比較；血壓建議最後測量，以免吵醒嬰兒。',
+      items: [
+        { key: 'c', label: 'C 哭聲 Crying', opts: [[0, '不哭，或哭聲非高音調'], [1, '高音調哭聲，但可安撫'], [2, '無法安撫的哭泣']] },
+        { key: 'r', label: 'R 需氧以維持 SpO₂ >95%', opts: [[0, '不需要'], [1, 'FiO₂ ≤30%'], [2, 'FiO₂ >30%']] },
+        { key: 'i', label: 'I 生命徵象上升（HR、BP）', opts: [[0, 'HR 與 BP 皆未高於基準'], [1, 'HR 或 BP 上升 ≤20%'], [2, 'HR 或 BP 上升 >20%']] },
+        { key: 'e', label: 'E 表情 Expression', opts: [[0, '無痛苦表情'], [1, '皺眉扭曲（grimace）'], [2, '皺眉扭曲合併哼聲（grimace／grunt）']] },
+        { key: 's', label: 'S 無法入睡 Sleepless', opts: [[0, '無，可正常睡眠'], [1, '頻繁醒來'], [2, '持續清醒']] }
+      ],
+      ref: 'Krechel SW, Bildner J. Paediatr Anaesth 1995;5:53-61.'
+    },
+    PAINAD: {
+      name: 'PAINAD 晚期失智疼痛量表', who: '進階失智、無法可靠自述的病人', kind: 'obs', min: 0, max: 10, mapNRS: true,
+      how: '觀察約 5 分鐘（可於活動、翻身或照護時）。每項 0–2 分。分數高也可能來自焦躁或其他不適，需合併病史與身體檢查判斷，必要時嘗試止痛後再評估。',
+      items: [
+        { key: 'breath', label: '呼吸（與發聲無關）', opts: [[0, '正常'], [1, '偶爾呼吸費力、短暫過度換氣'], [2, '呼吸費力且有雜音、長時間過度換氣、陳施氏呼吸']] },
+        { key: 'vocal', label: '負面發聲', opts: [[0, '無'], [1, '偶爾呻吟或哼聲、低聲且帶負面或不滿語氣'], [2, '反覆不安地叫喊、大聲呻吟或哼聲、哭泣']] },
+        { key: 'face', label: '臉部表情', opts: [[0, '微笑或無表情'], [1, '悲傷、害怕、皺眉'], [2, '痛苦扭曲表情']] },
+        { key: 'body', label: '肢體語言', opts: [[0, '放鬆'], [1, '緊繃、苦惱地踱步、坐立不安'], [2, '僵直、握拳、屈膝縮起、拉扯或推開、出手攻擊']] },
+        { key: 'consol', label: '可安撫性', opts: [[0, '不需安撫'], [1, '以聲音或觸摸可轉移注意或安心'], [2, '無法安撫、轉移注意或使其安心']] }
+      ],
+      ref: 'Warden V, Hurley AC, Volicer L. J Am Med Dir Assoc 2003;4:9-15.'
+    },
+    CPOT: {
+      name: 'CPOT 重症疼痛觀察工具', who: '無法自述的重症成人（插管或未插管）', kind: 'obs', min: 0, max: 8, mapNRS: false,
+      how: '先於休息時觀察約 1 分鐘，再於翻身、抽痰等處置時評估。肌肉張力以上肢被動屈曲／伸展評估。每項 0–2 分。',
+      modes: { vent: '插管：呼吸器順應性', vocal: '未插管：發聲' },
+      items: [
+        { key: 'face', label: '臉部表情', opts: [[0, '放鬆、中性（無肌肉緊張）'], [1, '緊繃：皺眉、眉毛下壓、眼眶緊縮'], [2, '痛苦扭曲：上述加上緊閉眼瞼，可能張口或咬氣管內管']] },
+        { key: 'body', label: '身體動作', opts: [[0, '無動作或姿勢正常'], [1, '保護動作：緩慢小心移動、觸摸或摩擦疼痛處、以動作引起注意'], [2, '躁動：拉扯管路、試圖坐起、肢體亂動、不遵從指令、攻擊人員、試圖下床']] },
+        { key: 'vent', mode: 'vent', label: '呼吸器順應性（插管）', opts: [[0, '可耐受呼吸器或動作，警報未響'], [1, '咳嗽但可耐受，警報可能響但自行停止'], [2, '對抗呼吸器：不同步、阻擋通氣、警報頻繁']] },
+        { key: 'vocal', mode: 'vocal', label: '發聲（未插管）', opts: [[0, '正常語調說話或無聲'], [1, '嘆氣、呻吟'], [2, '大叫、啜泣']] },
+        { key: 'tension', label: '肌肉張力（上肢被動屈伸）', opts: [[0, '放鬆，無阻力'], [1, '緊繃、僵硬，對被動動作有阻力'], [2, '非常緊繃或僵硬，強烈阻力、無法完成動作']] }
+      ],
+      ref: 'Gélinas C et al. Am J Crit Care 2006;15:420-7；SCCM PADIS 2018（Devlin JW et al. Crit Care Med 2018;46:e825-73）。'
+    },
+    BPS: {
+      name: 'BPS 行為疼痛量表（BPS／BPS-NI）', who: '無法自述的重症成人（插管用 BPS；未插管用 BPS-NI）', kind: 'obs', min: 3, max: 12, mapNRS: false,
+      how: '每項 1–4 分，總分 3–12；3 分表示無疼痛行為。建議於休息時及翻身、抽痰等處置時各評一次。',
+      modes: { vent: '插管：BPS', vocal: '未插管：BPS-NI' },
+      items: [
+        { key: 'face', label: '臉部表情', opts: [[1, '放鬆'], [2, '部分緊繃（如眉毛下壓）'], [3, '完全緊繃（如眼瞼緊閉）'], [4, '痛苦扭曲表情']] },
+        { key: 'limb', label: '上肢', opts: [[1, '無動作'], [2, '部分彎曲'], [3, '完全彎曲並手指屈曲'], [4, '持續回縮']] },
+        { key: 'vent', mode: 'vent', label: '呼吸器順應性（插管）', opts: [[1, '可耐受動作'], [2, '咳嗽，但大部分時間可耐受'], [3, '對抗呼吸器'], [4, '無法控制通氣']] },
+        { key: 'vocal', mode: 'vocal', label: '發聲（BPS-NI，未插管）', opts: [[1, '無疼痛發聲'], [2, '偶爾呻吟（≤3 次/分且每次 ≤3 秒）'], [3, '頻繁（>3 次/分）或持續（>3 秒）呻吟'], [4, '吼叫或口語抱怨（如「哎唷」），或屏住呼吸']] }
+      ],
+      ref: 'Payen JF et al. Crit Care Med 2001;29:2258-63；Chanques G et al. Intensive Care Med 2009;35:2060-7（BPS-NI）；SCCM PADIS 2018。'
+    }
+  };
+
+  function scaleItems(id, mode) {
+    var sc = SCALES[id]; if (!sc || !sc.items) return [];
+    var m = sc.modes ? (mode || 'vent') : null;
+    return sc.items.filter(function (it) { return !it.mode || it.mode === m; });
+  }
+
+  function band10(t) { return t === 0 ? ['none', '0 分：無疼痛行為'] : t <= 3 ? ['mild', '1–3 分：輕度'] : t <= 6 ? ['moderate', '4–6 分：中度'] : ['severe', '7–10 分：重度']; }
+
+  // answers: { itemKey: score } (FACES: { face: 0|2|…|10 }). Returns null for unknown scale.
+  function scoreScale(id, answers, mode) {
+    var sc = SCALES[id]; if (!sc) return null;
+    answers = answers || {};
+    var total = 0, answered = 0, need, items = scaleItems(id, mode);
+    if (id === 'FACES') {
+      need = 1;
+      if (sc.faces.indexOf(answers.face) >= 0) { total = answers.face; answered = 1; }
+    } else {
+      need = items.length;
+      items.forEach(function (it) {
+        var v = answers[it.key];
+        if (it.opts.some(function (o) { return o[0] === v; })) { total += v; answered++; }
+      });
+    }
+    var complete = answered === need, r = { id: id, complete: complete, answered: answered, need: need, total: complete ? total : null, min: sc.min, max: sc.max, mapNRS: sc.mapNRS, pain: null, level: null, text: '' };
+    if (!complete) { r.text = '尚有 ' + (need - answered) + ' 項未評分。'; return r; }
+    var b;
+    if (id === 'FACES') { b = band10(total); r.level = b[0]; r.pain = total > 0; r.text = '病人自述 ' + total + '/10（' + b[1].split('：')[1] + '），可直接對應 0–10 分級。'; }
+    else if (id === 'FLACC') { b = band10(total); r.level = b[0]; r.pain = total > 0; r.text = total === 0 ? '放鬆、舒適。' : b[1] + (total <= 3 ? '不適' : '疼痛') + '（Merkel 1997 常用分級）。'; }
+    else if (id === 'PAINAD') { b = band10(total); r.level = b[0]; r.pain = total > 0; r.text = b[1] + '（臨床常用分級，原作者未正式驗證切點）。'; }
+    else if (id === 'CRIES') { r.pain = total > 4; r.text = total > 4 ? '>4 分：提示疼痛，應考慮止痛介入並於處置後再評估（Krechel 1995）。' : '≤4 分：未達止痛介入門檻，持續觀察與非藥物安撫。'; }
+    else if (id === 'CPOT') { r.pain = total > 2; r.text = total > 2 ? '>2 分：可能有疼痛，應處理並於處置後以 CPOT 複評（Gélinas 驗證切點）。' : '≤2 分：疼痛可能性低，持續定時評估。'; }
+    else if (id === 'BPS') { r.pain = total > 5; r.text = total === 3 ? '3 分：無疼痛行為。' : total > 5 ? '>5 分：提示明顯疼痛，應處理並複評。' : '4–5 分：輕微疼痛行為，持續觀察並視情況處理。'; }
+    return r;
+  }
+
+  return { evaluate: evaluate, followup: followup, sevOf: sevOf, FLAG_LABEL: FLAG_LABEL, SCALES: SCALES, scaleItems: scaleItems, scoreScale: scoreScale };
 })();
 if (typeof module !== 'undefined') module.exports = PAIN;
 /*ENGINE-END*/
@@ -326,6 +460,7 @@ function render(){
  let chips = '<span class="chip info">' + esc(R.causeLabel) + '</span>';
  if (R.adult && R.n > 0) chips += '<span class="chip ' + CHIP[R.nsaid][0] + '">' + CHIP[R.nsaid][1] + '</span>' + '<span class="chip ' + (R.morphineAvoid?'avoid':'ok') + '">Morphine：' + (R.morphineAvoid?'避免':'可用') + '</span>' + '<span class="chip ' + (R.ketamineAvoid?'avoid':'ok') + '">Ketamine：' + (R.ketamineAvoid?'避免':'可用') + '</span>' + '<span class="chip ' + (R.para.ivContra||R.para.renalAdjust?'caution':'info') + '">Paracetamol ' + (R.para.ivContra ? 'IV 禁用・PO ' : '') + '≤' + R.para.maxG + ' g/日' + (R.para.renalAdjust ? '・腎功能需減量' : '') + '</span>';
  let h = '<h2>個人化治療決策：' + R.sevLabel + '（NRS ' + R.n + '/10）</h2><div>' + chips + '</div>';
+ const src = srcLines(); if (src.length) h += '<div class="note"><strong>疼痛評估工具：</strong>' + src.map(esc).join('；') + (initSrc && PAIN.SCALES[initSrc.id].kind === 'obs' ? '<br><small>分級借用 0–10 行為分數，請以同一量表複評。</small>' : '') + '</div>';
  h += R.warnings.length ? '<div class="note danger"><h3>風險及安全警示</h3>' + list(R.warnings) + '</div>' : '<div class="note ok">未勾選額外高危險警示，仍須由醫師完整評估。</div>';
  if (R.causeNotes.length) h += '<h3>病因導向重點</h3>' + list(R.causeNotes);
  h += '<h3>建議治療路徑（依嚴重度逐層疊加）</h3>' + R.tiers.map(t => '<div class="tier t-' + t.key + '"><h3>' + esc(t.title) + '</h3>' + list(t.items) + '</div>').join('');
@@ -352,8 +487,8 @@ function updateRepeat(){
  const F = PAIN.followup(R.n, Number(value), $('route').value);
  const cls = {relieved:'ok', partial:'warn', notRelieved:'danger', worse:'danger', none:'ok'}[F.status];
  $('followup').className = 'note ' + cls;
- $('followup').textContent = '初始 NRS ' + R.n + ' → 複評 ' + value + '；改善 ' + F.d + ' 分' + (F.pct !== null ? '（' + F.pct + '%）' : '') + '。' + F.action +
-  (F.next ? ' 下次複評：約 ' + F.next + ' 分鐘後（依給藥途徑）。' : ' 請選擇給藥途徑以決定下次複評時間。');
+ $('followup').textContent = (initSrc || repSrc ? '（' + (initSrc ? '初始 ' + initSrc.label : '初始 NRS') + ' → ' + (repSrc ? '複評 ' + repSrc.label : '複評 NRS') + '）' : '') + '初始 ' + R.n + ' → 複評 ' + value + '；改善 ' + F.d + ' 分' + (F.pct !== null ? '（' + F.pct + '%）' : '') + '。' + F.action +
+  ((initSrc ? initSrc.id : 'NRS') !== (repSrc ? repSrc.id : 'NRS') ? ' ⚠ 初始與複評使用不同評估工具，改善百分比僅供參考，建議以同一量表複評。' : '') + (F.next ? ' 下次複評：約 ' + F.next + ' 分鐘後（依給藥途徑）。' : ' 請選擇給藥途徑以決定下次複評時間。');
 }
 $('generate').addEventListener('click', render);
 $('reset').addEventListener('click', () => location.reload());
@@ -364,9 +499,87 @@ document.querySelectorAll('.input-area input, .input-area select').forEach(el =>
  el.addEventListener(el.type === 'number' ? 'input' : 'change', () => { if (generated) render(); });
 });
 $('repeat').addEventListener('change', updateRepeat); $('route').addEventListener('change', updateRepeat);
+// ---- Alternative pain scales (dialog) ----
+const scaleAns = {}, scaleMode = {};
+let curScale = null, initSrc = null, repSrc = null;
+const obsRec = {};
+function faceSvg(i){ // original illustrative faces, 0 (no pain) → 5 (very much pain); no smiles or tears
+ const b = i*2.2, m = i*3.2, eyeH = Math.max(1.2, 5 - i*0.75);
+ return '<svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="36" fill="#fff8e6" stroke="#5a6b80" stroke-width="3"/>' +
+  '<path d="M18 ' + (27 + b*0.5) + ' L32 ' + (27 - b*0.7) + 'M62 ' + (27 + b*0.5) + ' L48 ' + (27 - b*0.7) + '" stroke="#5a6b80" stroke-width="3" stroke-linecap="round" fill="none"/>' +
+  '<ellipse cx="27" cy="38" rx="4" ry="' + eyeH + '" fill="#2b3a4d"/><ellipse cx="53" cy="38" rx="4" ry="' + eyeH + '" fill="#2b3a4d"/>' +
+  '<path d="M26 ' + (58 + m*0.3) + ' Q40 ' + (58 - m) + ' 54 ' + (58 + m*0.3) + '" stroke="#5a6b80" stroke-width="3" stroke-linecap="round" fill="none"/></svg>';
+}
+function openScale(id){
+ curScale = id; const sc = PAIN.SCALES[id];
+ if (sc.modes && !scaleMode[id]) scaleMode[id] = 'vent';
+ scaleAns[id] = scaleAns[id] || {};
+ $('scaleTitle').textContent = sc.name; $('scaleWho').textContent = '適用：' + sc.who;
+ drawScale(); const d = $('scaleDlg'); if (d.showModal) d.showModal(); else d.setAttribute('open','');
+ d.scrollTop = 0;
+}
+function drawScale(){
+ const id = curScale, sc = PAIN.SCALES[id], a = scaleAns[id];
+ let h = '<div class="note" style="margin-top:0">' + esc(sc.how) + '</div>';
+ if (sc.modes) h += '<div class="sc-mode" role="group" aria-label="病人狀態">' + Object.keys(sc.modes).map(k => '<button type="button" class="' + (scaleMode[id]===k?'':'secondary') + '" data-mode="' + k + '" aria-pressed="' + (scaleMode[id]===k) + '">' + esc(sc.modes[k]) + '</button>').join('') + '</div>';
+ if (id === 'FACES') {
+  h += '<div class="faces" role="group" aria-label="臉譜">' + sc.faces.map((v,i) => '<button type="button" class="sc-opt" data-item="face" data-v="' + v + '" aria-pressed="' + (a.face===v) + '" aria-label="' + v + ' 分">' + faceSvg(i) + '<b>' + v + '</b></button>').join('') + '</div>';
+  h += '<p class="muted" style="font-size:13px">左：一點都不痛（0）→ 右：非常非常痛（10）。</p>';
+ } else {
+  h += PAIN.scaleItems(id, scaleMode[id]).map(it => '<div class="sc-item"><h3>' + esc(it.label) + '</h3><div class="sc-opts" role="group" aria-label="' + esc(it.label) + '">' + it.opts.map(o => '<button type="button" class="sc-opt" data-item="' + it.key + '" data-v="' + o[0] + '" aria-pressed="' + (a[it.key]===o[0]) + '"><b>' + o[0] + '</b>' + esc(o[1]) + '</button>').join('') + '</div></div>').join('');
+ }
+ if (!sc.mapNRS) h += '<p class="muted" style="font-size:13px">此量表用於判斷「是否有明顯疼痛」及治療後複評，不換算為 0–10 強度；STEP 2 的疼痛分級請依臨床判斷選擇，「記錄至摘要」會把結果附在治療方案與複製摘要中。</p>';
+ h += '<p class="muted" style="font-size:12px;margin-bottom:0">出處：' + esc(sc.ref) + '　描述為中文意譯，請以原始文獻／院內版本為準。</p>';
+ $('scaleBody').innerHTML = h; updScaleTotal();
+}
+function updScaleTotal(){
+ const sc = PAIN.SCALES[curScale], r = PAIN.scoreScale(curScale, scaleAns[curScale], scaleMode[curScale]);
+ $('scaleTotal').innerHTML = r.complete ? esc(curScale + '：' + r.total + ' / ' + sc.max) + '<small>' + esc(r.text) + '</small>' : '已評 ' + r.answered + '/' + r.need + ' 項<small>' + esc(r.text) + '</small>';
+ $('scaleTotal').style.color = r.complete ? (r.pain ? '#8a2111' : '#145a32') : '';
+ $('scaleToInit').hidden = $('scaleToRepeat').hidden = !sc.mapNRS; $('scaleRecord').hidden = sc.mapNRS;
+ [$('scaleToInit'), $('scaleToRepeat'), $('scaleRecord')].forEach(b => b.disabled = !r.complete);
+ return r;
+}
+function scaleLabel(r){ const sc = PAIN.SCALES[r.id]; return r.id + (sc.modes ? '（' + sc.modes[scaleMode[r.id]].split('：')[1] + '）' : '') + ' ' + r.total + '/' + sc.max; }
+function showSources(){
+ const lines = [];
+ if (initSrc) lines.push('初始分級來源：' + initSrc.label + '｜' + initSrc.text);
+ if (repSrc) lines.push('複評來源：' + repSrc.label + '｜' + repSrc.text);
+ Object.values(obsRec).forEach(o => lines.push('觀察量表：' + o.label + '｜' + o.text));
+ $('scaleSource').innerHTML = lines.map(esc).join('<br>');
+}
+function srcLines(){ const l = []; if (initSrc) l.push('初始：' + initSrc.label + (PAIN.SCALES[initSrc.id].kind === 'obs' ? '（行為觀察量表，非自述 NRS）' : '（自述）')); if (repSrc) l.push('複評：' + repSrc.label); Object.values(obsRec).forEach(o => l.push(o.label + '：' + o.text)); return l; }
+$('scaleBody').addEventListener('click', e => {
+ const m = e.target.closest('[data-mode]'); if (m){ scaleMode[curScale] = m.dataset.mode; drawScale(); return; }
+ const b = e.target.closest('.sc-opt'); if (!b) return;
+ scaleAns[curScale][b.dataset.item] = Number(b.dataset.v);
+ b.parentNode.querySelectorAll('.sc-opt').forEach(x => x.setAttribute('aria-pressed', x === b));
+ updScaleTotal();
+});
+document.querySelectorAll('[data-scale]').forEach(b => b.addEventListener('click', () => openScale(b.dataset.scale)));
+$('scaleClose').addEventListener('click', () => $('scaleDlg').close());
+$('scaleDlg').addEventListener('click', e => { if (e.target === $('scaleDlg')) $('scaleDlg').close(); });
+$('scaleClear').addEventListener('click', () => { scaleAns[curScale] = {}; drawScale(); });
+$('scaleToInit').addEventListener('click', () => {
+ const r = updScaleTotal(); if (!r.complete) return;
+ $('nrs').value = String(r.total); initSrc = { id: r.id, label: scaleLabel(r), text: r.text };
+ showSources(); $('scaleDlg').close(); render(); $('result').scrollIntoView({behavior:'smooth', block:'start'});
+});
+$('scaleToRepeat').addEventListener('click', () => {
+ const r = updScaleTotal(); if (!r.complete) return;
+ $('repeat').value = String(r.total); repSrc = { id: r.id, label: scaleLabel(r), text: r.text };
+ showSources(); $('scaleDlg').close(); updateRepeat(); $('followup').scrollIntoView({behavior:'smooth', block:'center'});
+});
+$('scaleRecord').addEventListener('click', () => {
+ const r = updScaleTotal(); if (!r.complete) return;
+ obsRec[r.id] = { label: scaleLabel(r), text: r.text };
+ showSources(); $('scaleDlg').close(); if (generated) render();
+});
+$('nrs').addEventListener('change', () => { if (initSrc){ initSrc = null; showSources(); if (generated) render(); } });
+$('repeat').addEventListener('change', () => { if (repSrc){ repSrc = null; showSources(); } });
 $('copy').addEventListener('click', async () => {
  if (!last){ alert('請先產生治療建議'); return; }
- const t = last + '\n【複評】' + $('followup').textContent + '\n【處置備註】' + ($('notes').value || '無');
+ const t = last + (srcLines().length ? '\n【評估工具】' + srcLines().join('；') : '') + '\n【複評】' + $('followup').textContent + '\n【處置備註】' + ($('notes').value || '無');
  try { await navigator.clipboard.writeText(t); alert('已複製摘要'); } catch(e){ prompt('請複製摘要', t); }
 });
 </script></body></html>

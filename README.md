@@ -9,6 +9,7 @@
 - 多模式止痛：成人 Figure 8.3a、兒童 Figure 8.3b 逐層疊加；病因導向重點（骨折、腎絞痛、腹痛、頭痛、腰背痛、牙痛、神經病變性）
 - 成人起始劑量參考（第 8 章）：paracetamol（≥50 kg 依 EUSEM；<50 kg 依台灣仿單 15 mg/kg q6h 或 12.5 mg/kg q4h、每日 ≤75 mg/kg；肝病 ≤2 g）、ketamine、fentanyl、morphine
 - 特殊族群（第 7 章）、重大創傷（NICE NG39 1.7.4–1.7.6）
+- 無法自述 NRS 時的評量表（按鈕開啟、逐項點選計分）：FACES（自繪示意臉譜）、FLACC、CRIES、PAINAD、CPOT（插管／未插管）、BPS／BPS-NI；0–10 量表可帶入初始分級或複評，CRIES／CPOT／BPS 依原始切點判讀並記錄至摘要
 - 複評（Figure 8.1）：依嚴重度與給藥途徑決定時間；改善 ≥30% 視為具臨床意義（第 3 章）
 
 ## 開發

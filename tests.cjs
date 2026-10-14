@@ -111,5 +111,31 @@ t('Case C (83 y, 48 kg, GI bleed) matches teaching text', () => {
   assert.equal(r.sev, 'moderate'); assert.equal(r.nsaid, 'avoid'); assert.equal(r.para.maxG, 3.6);
 });
 
+console.log('Alternative pain scales');
+const sc = (id, a, m) => P.scoreScale(id, a, m);
+t('all six scales defined', () => assert.deepEqual(Object.keys(P.SCALES).sort(), ['BPS', 'CPOT', 'CRIES', 'FACES', 'FLACC', 'PAINAD']));
+t('incomplete → total null', () => { const r = sc('FLACC', { face: 2 }); assert.equal(r.complete, false); assert.equal(r.total, null); assert.equal(r.answered, 1); });
+t('FLACC 2+1+1+1+1 = 6 moderate, maps to NRS bands', () => { const r = sc('FLACC', { face: 2, legs: 1, activity: 1, cry: 1, consol: 1 }); assert.equal(r.total, 6); assert.equal(r.level, 'moderate'); assert.equal(r.mapNRS, true); });
+t('FLACC all 0 → not pain', () => assert.equal(sc('FLACC', { face: 0, legs: 0, activity: 0, cry: 0, consol: 0 }).pain, false));
+t('FACES only even values 0–10', () => { assert.equal(sc('FACES', { face: 8 }).total, 8); assert.equal(sc('FACES', { face: 7 }).complete, false); assert.equal(sc('FACES', { face: 8 }).level, 'severe'); });
+t('CRIES threshold >4', () => { assert.equal(sc('CRIES', { c: 1, r: 1, i: 1, e: 1, s: 0 }).pain, false); assert.equal(sc('CRIES', { c: 1, r: 1, i: 1, e: 1, s: 1 }).pain, true); assert.equal(P.SCALES.CRIES.mapNRS, false); });
+t('PAINAD 7 → severe', () => assert.equal(sc('PAINAD', { breath: 1, vocal: 2, face: 2, body: 1, consol: 1 }).level, 'severe'));
+t('CPOT: ventilator vs vocalization item, max 8, threshold >2', () => {
+  assert.deepEqual(P.scaleItems('CPOT', 'vent').map(i => i.key), ['face', 'body', 'vent', 'tension']);
+  assert.deepEqual(P.scaleItems('CPOT', 'vocal').map(i => i.key), ['face', 'body', 'vocal', 'tension']);
+  assert.equal(sc('CPOT', { face: 1, body: 1, vent: 0, tension: 0 }, 'vent').pain, false);
+  assert.equal(sc('CPOT', { face: 1, body: 1, vocal: 1, tension: 0 }, 'vocal').pain, true);
+  assert.equal(sc('CPOT', { face: 2, body: 2, vent: 2, tension: 2 }, 'vent').total, 8);
+  assert.equal(sc('CPOT', { face: 1, body: 1, vent: 1, tension: 0 }, 'vocal').complete, false);
+});
+t('BPS 3–12, 0 is not a valid option, threshold >5', () => {
+  assert.equal(sc('BPS', { face: 1, limb: 1, vent: 1 }, 'vent').total, 3);
+  assert.equal(sc('BPS', { face: 0, limb: 1, vent: 1 }, 'vent').complete, false);
+  assert.equal(sc('BPS', { face: 2, limb: 2, vent: 1 }, 'vent').pain, false);
+  assert.equal(sc('BPS', { face: 2, limb: 2, vocal: 2 }, 'vocal').pain, true);
+  assert.equal(sc('BPS', { face: 4, limb: 4, vent: 4 }, 'vent').total, 12);
+});
+t('every option score within scale range', () => Object.keys(P.SCALES).forEach(id => (P.SCALES[id].items || []).forEach(it => it.opts.forEach(o => assert.ok(o[0] >= 0 && o[0] <= 4, id)))));
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
