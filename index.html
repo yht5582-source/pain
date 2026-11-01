@@ -20,6 +20,12 @@ dialog#scaleDlg{overflow:auto;border:0;border-radius:14px;padding:0;width:min(86
 #scaleSource:empty{display:none}
 @media(max-width:550px){.faces{grid-template-columns:repeat(3,1fr)}.dlg-body{padding:12px}.sc-opts{grid-template-columns:1fr}}
 #printSummary{display:none}
+.mm{position:relative;display:grid;grid-template-columns:1fr 112px 1fr;column-gap:34px;align-items:start}#mmLinks{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}#mmLinks path{fill:none;stroke-width:2.5}#mmLinks path.dx{stroke:#7fa9cf}#mmLinks path.tx{stroke:#7dbb98}
+.mm-side{position:relative;min-width:0}.mm-center{position:relative;align-self:center;background:#183252;color:white;border-radius:14px;padding:16px 8px;text-align:center;font-weight:800;line-height:1.45}.mm-center small{display:block;color:#cfe1ee;font-weight:400;margin-top:4px}
+.mm-col{margin:0 0 10px;font-size:17px}.mm-col.dx{color:#1d5f9d}.mm-col.tx{color:#26704a}
+.mm-branch{margin-bottom:12px}.mm-head{display:block;width:100%;margin:0;text-align:left;padding:9px 12px;line-height:1.4}.mm-branch.dx .mm-head{background:#1d5f9d}.mm-branch.tx .mm-head{background:#26704a}.mm-head::after{content:"▾";float:right;margin-top:-22px}.mm-head[aria-expanded=false]::after{content:"▸"}.mm-t{display:block;padding-right:16px}.mm-s{display:block;font-weight:400;font-size:12px;opacity:.9}
+.mm-leaves{list-style:none;margin:0;padding:8px 10px;font-size:13.5px;line-height:1.55;border:1px solid #dce5ee;border-top:0;border-radius:0 0 9px 9px;background:white}.mm-leaves[hidden]{display:none}.mm-leaves li{padding:4px 0;border-bottom:1px dashed #e4ebf2}.mm-leaves li:last-child{border-bottom:0}.mm-leaves b{color:#173e60}.mm-tw{display:inline-block;border-radius:99px;padding:0 7px;font-size:11px;font-weight:700;background:#d9f2e3;color:#145a32;white-space:nowrap}
+@media(max-width:760px){.mm{grid-template-columns:1fr;row-gap:14px}#mmLinks{display:none}.mm-center{order:-1;padding:12px}.mm-center br{display:none}}
 .jump{margin:0 0 14px;font-size:14px}.jump a{color:#1d5f9d;font-weight:700}
 .qz-sets{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}.qz-sets button{margin:0}
 .qz-q{border:1px solid #dce5ee;border-radius:10px;padding:12px 14px;margin:0 0 12px;min-width:0}.qz-q legend{padding:0 6px;font-size:12px;color:#64778d}.qz-q .stem{margin:0 0 10px;font-weight:600;line-height:1.6}
@@ -27,13 +33,13 @@ dialog#scaleDlg{overflow:auto;border:0;border-radius:14px;padding:0;width:min(86
 .qz-opt{display:flex;gap:8px;align-items:flex-start;border:1px solid #c9d8e6;border-radius:8px;padding:9px 10px;margin-bottom:6px;font-size:14px;line-height:1.5;cursor:pointer;background:#f6f9fc}.qz-opt input{width:auto;flex:none;margin:3px 0 0}.qz-opt b{flex:none}
 .qz-opt.right{background:#d9f2e3;border-color:#3d9a62}.qz-opt.wrong{background:#fde0db;border-color:#c4462f}
 .qz-why{margin:10px 0 0;font-size:14px}.qz-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.qz-bar button{margin:0}.qz-score{font-size:26px;font-weight:800;margin:4px 0}
-@media print{dialog,header,button,.input-area,#demoCases,#quiz,.jump,.noprint{display:none!important}#printSummary{display:block}body{background:white}section{box-shadow:none;break-inside:avoid}}
+@media print{dialog,header,button,.input-area,#demoCases,#quiz,#mindmap,.jump,.noprint{display:none!important}#printSummary{display:block}body{background:white}section{box-shadow:none;break-inside:avoid}}
 @media(max-width:550px){main{padding:12px}section{padding:15px}header{padding:22px 16px}header h1{font-size:22px}}
 </style></head><body>
-<header><h1>急診急性疼痛｜互動治療決策導航</h1><p>EUSEM 2025 × ACEP × NICE｜評估 → 安全篩選 → 多模式止痛 → 複評｜v1.3</p></header>
+<header><h1>急診急性疼痛｜互動治療決策導航</h1><p>EUSEM 2025 × ACEP × NICE｜評估 → 安全篩選 → 多模式止痛 → 複評｜v1.4</p></header>
 <main>
 <div class="note warn"><strong>臨床決策輔助原型，不可直接作為醫囑。</strong> 建議需由醫師評估病因、生命徵象、過敏及院內藥品仿單。兒童、懷孕、重大創傷、程序性鎮靜應遵循專用流程。本網站不儲存或傳送個人資料，請勿輸入病人姓名或身分證字號。</div>
-<p class="jump">快速前往：<a href="#demoCases">示範病例（6 例）</a> · <a href="#quiz">測驗（基礎 10＋高階 10）</a></p>
+<p class="jump">快速前往：<a href="#demoCases">示範病例（6 例）</a> · <a href="#mindmap">診療心智圖</a> · <a href="#quiz">測驗（基礎 10＋高階 10）</a></p>
 <section class="input-area" id="demoCases"><span class="step">示範教學</span><h2>六組臨床示範病例｜一鍵帶入</h2>
 <p class="muted">所有資料均為虛構教學情境。點選案例後自動填入資料並生成分析，請觀察哪些藥物選項被限制、為什麼限制，以及複評時間。</p>
 <div class="grid">
@@ -104,13 +110,17 @@ dialog#scaleDlg{overflow:auto;border:0;border-radius:14px;padding:0;width:min(86
 <label class="field">處置備註<textarea id="notes" rows="2" placeholder="藥物、劑量、時間、生命徵象、是否不良反應"></textarea></label></div>
 <button type="button" id="copy">複製治療摘要</button><button type="button" class="secondary" id="print">列印</button>
 <div id="followup" class="note">請先產生建議並輸入複評分數。</div></section>
+<section id="mindmap"><span class="step">總覽</span><h2>診斷與治療心智圖</h2>
+<p class="muted">分成評估與治療兩部分，各依編號順序進行。點分支可展開細節。內容與上方決策工具使用相同規則；未標示者依 EUSEM 2025、NICE NG39 或 ACEP 2020，<span class="mm-tw">台灣仿單</span> 表示來自台灣藥品仿單。</p>
+<div class="qz-bar" style="margin-bottom:14px"><button type="button" class="secondary" id="mmOpen">全部展開</button><button type="button" class="secondary" id="mmClose">全部收合</button></div>
+<div class="mm" id="mmWrap"><svg id="mmLinks" aria-hidden="true"></svg><div class="mm-side" id="mmDx"></div><div class="mm-center" id="mmCenter">急診<br>急性疼痛<small>先安全<br>再止痛<br>必複評</small></div><div class="mm-side" id="mmTx"></div></div></section>
 <section id="quiz"><span class="step">自我評量</span><h2>急性疼痛測驗｜20 題</h2>
 <p class="muted">基礎題考核心規則；高階題為多重限制、資料互相衝突或計算陷阱，須整合多個條件。依本頁採用的指引與仿單命題，交卷後顯示解析；作答不會儲存。每次開始選項順序隨機。</p>
 <div class="qz-sets" role="group" aria-label="題組"><button type="button" data-qset="all">全部 20 題</button><button type="button" data-qset="basic">基礎 10 題</button><button type="button" data-qset="adv">高階 10 題</button></div>
 <div id="quizBox"></div></section>
 <section><h2>文獻與使用原則</h2><p>本系統使用 EUSEM 2025 的初始評估、疼痛分層（Figure 8.2）、成人／兒童治療選項（Figure 8.3a/b）、特殊族群（第 7 章：腎病、肝病、妊娠、高齡）與複評原則（Figure 8.1）；重大創傷參考 NICE NG39 1.7.4–1.7.6，opioid 使用原則參考 ACEP 2020。無法自述者的評量表：FLACC（Merkel 1997）、FACES（FPS-R，Hicks 2001；Wong-Baker 1988）、CRIES（Krechel 1995）、PAINAD（Warden 2003）、CPOT（Gélinas 2006）、BPS／BPS-NI（Payen 2001；Chanques 2009），項目為中文意譯、臉譜為本站自繪示意圖。藥物具各國核准差異（例如 methoxyflurane、metamizole、SL sufentanil 在台灣未必可取得），選用須符合當地仿單與院內規範。</p>
 <p><a href="https://eusem.org/images/251210_EUSEM_European_Pain_Initiative_Guidelines_Updated_Oct_2025.pdf" target="_blank" rel="noopener">EUSEM 2025 原始手冊</a> · <a href="https://www.acep.org/siteassets/new-pdfs/clinical-policies/opioids-2020.pdf" target="_blank" rel="noopener">ACEP Opioid Policy</a> · <a href="https://www.nice.org.uk/guidance/ng39/chapter/Recommendations" target="_blank" rel="noopener">NICE NG39</a> · <a href="https://www.kidney.org/kidney-topics/pain-medicines-and-kidney-disease" target="_blank" rel="noopener">NKF Kidney Safety</a> · <a href="https://iasp-pain.org/resources/faces-pain-scale-revised/" target="_blank" rel="noopener">FPS-R（IASP）</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/30113379/" target="_blank" rel="noopener">SCCM PADIS 2018（CPOT／BPS）</a> · <a href="https://yht5582-source.github.io/Migraine--Headache/" target="_blank" rel="noopener">偏頭痛／頭痛專頁</a></p></section>
-<footer>Version 1.3 | 2026-11-01 | Clinical decision support only. 成人劑量僅列 EUSEM 2025 第 8 章原文起始劑量供核對；體重 <50 kg 的 paracetamol 依台灣仿單；未包含處方自動簽署、兒童體重劑量或完整藥物交互作用資料庫。</footer>
+<footer>Version 1.4 | 2026-11-01 | Clinical decision support only. 成人劑量僅列 EUSEM 2025 第 8 章原文起始劑量供核對；體重 <50 kg 的 paracetamol 依台灣仿單；未包含處方自動簽署、兒童體重劑量或完整藥物交互作用資料庫。</footer>
 </main>
 <dialog id="scaleDlg" aria-labelledby="scaleTitle">
 <div class="dlg-head"><div><h2 id="scaleTitle"></h2><p id="scaleWho"></p></div><button type="button" id="scaleClose" aria-label="關閉評量表">✕ 關閉</button></div>
@@ -465,6 +475,80 @@ const PAIN_QUIZ = [
 ];
 /*QUIZ-END*/
 
+/*MAP-START*/
+// Leaves restate rules already implemented in PAIN (tests.cjs checks them). tw:true = Taiwan label, not an international guideline.
+const PAIN_MAP = {
+ dx: [
+  {t:'危急病因先排除',s:'救命處置與止痛同步',l:[
+   {k:'不穩定',x:'血流動力不穩、意識改變、呼吸不穩 → ABC 與監測'},
+   {k:'危急病因',x:'ACS、主動脈剝離、腔室症候群、缺血性肢體、急性腹症'},
+   {k:'重大創傷',x:'啟動外傷流程；止痛不延誤救命處置'}]},
+  {t:'評估疼痛強度',s:'以病人自述 NRS 為準',l:[
+   {k:'詢問',x:'0 完全不痛，10 能想像最劇烈；不靠心率或表情指定分數'},
+   {k:'輕度',x:'NRS 1–3'},{k:'中度',x:'NRS 4–6'},{k:'重度',x:'NRS 7–10'},
+   {k:'一併問',x:'止痛意願與功能目標（活動、睡眠、配合檢查）'}]},
+  {t:'無法自述時選量表',s:'初評與複評用同一量表',l:[
+   {k:'FACES',x:'約 3–4 歲以上，自行指認，可對應 0–10'},
+   {k:'FLACC',x:'約 2 個月–7 歲，行為觀察 0–10'},
+   {k:'CRIES',x:'新生兒／嬰兒，>4 分提示疼痛'},
+   {k:'PAINAD',x:'進階失智，行為觀察 0–10'},
+   {k:'CPOT',x:'重症成人，>2 分可能有疼痛'},
+   {k:'BPS／BPS-NI',x:'重症成人，總分 3–12，>5 分提示明顯疼痛'}]},
+  {t:'病因分類與紅旗',s:'找出原因才決定路徑',l:[
+   {k:'骨折／肌肉骨骼',x:'排除隱匿骨折'},
+   {k:'腎絞痛',x:'合併發燒或無尿 → 立即泌尿科'},
+   {k:'腹痛未明',x:'止痛不會增加診斷錯誤，不等外科'},
+   {k:'頭痛',x:'雷擊樣、神經學缺損、發燒頸僵硬、外傷、懷孕、免疫低下、≥50 歲新發'},
+   {k:'腰背痛',x:'馬尾症候群、感染、腫瘤、主動脈病變'},
+   {k:'其他',x:'牙痛安排牙科；神經病變性安排門診調藥'}]},
+  {t:'用藥安全篩選',s:'決定哪些藥物被限制',l:[
+   {k:'腎',x:'AKI、eGFR <30、透析；eGFR 30–59 謹慎'},
+   {k:'肝',x:'重度肝功能不全、活動性肝病、失代償肝硬化'},
+   {k:'出血／心／脫水',x:'消化道出血或潰瘍、心衰竭、低血容量'},
+   {k:'族群',x:'懷孕、≥65 歲、<16 歲、體重 <50 kg'},
+   {k:'呼吸',x:'低通氣、睡眠呼吸中止、合用鎮靜藥'},
+   {k:'用藥史',x:'NSAID 過敏、已用 NSAID 或 opioid、過敏史未確認'}]}
+ ],
+ tx: [
+  {t:'非藥物（全程）',s:'每位病人都先做',l:[
+   {x:'說明目標是改善，而非完全無痛'},
+   {x:'冰／熱敷、固定、抬高、姿勢調整、分散注意力'}]},
+  {t:'依嚴重度逐層疊加',s:'加不同機轉或途徑，不疊同類',l:[
+   {k:'輕度',x:'Paracetamol 為基礎；外用或口服 NSAID 擇一'},
+   {k:'中度',x:'加 IV paracetamol、IV ketorolac、吸入橋接、低劑量 ketamine、口服 IR opioid 或神經阻斷'},
+   {k:'重度',x:'先 ketamine 再滴定 opioid；IV morphine 首選，禁忌時 IN／IV fentanyl；適當時神經阻斷'}]},
+  {t:'成人起始劑量',s:'給藥前核對仿單與院內濃度',l:[
+   {k:'Paracetamol',x:'1 g，間隔 ≥4 小時，每日 ≤4 g，連續 ≤3 天'},
+   {k:'<50 kg',x:'15 mg/kg q6h 或 12.5 mg/kg q4h，單次 ≤750 mg，每日 ≤75 mg/kg',tw:true},
+   {k:'Ketamine',x:'IV 0.1 mg/kg；IN 0.7 mg/kg'},
+   {k:'Fentanyl',x:'IN／IV 起始 50 μg，可重複至總量 200 μg'},
+   {k:'Morphine IV',x:'2.5–15 mg，4–5 分鐘緩慢推注，由低劑量滴定'}]},
+  {t:'特殊族群調整',s:'篩選結果如何改變處方',l:[
+   {k:'腎',x:'避免 NSAIDs、morphine、codeine；opioid 優先短效 fentanyl'},
+   {k:'腎（paracetamol）',x:'CrCl ≤30 延長間隔、降低總量',tw:true},
+   {k:'肝',x:'口服 paracetamol 每日 ≤2 g；避免 NSAIDs；opioid 減量；ketamine 考慮減量'},
+   {k:'肝（IV）',x:'IV paracetamol 禁用，與上一條不一致，須依產品仿單並會同肝膽科',tw:true},
+   {k:'脫水',x:'避免 NSAIDs；paracetamol 每日 ≤3 g'},
+   {k:'妊娠',x:'Paracetamol 首選；約 20 週後避免 NSAIDs；避免 ketamine；短期 opioid 需監測，生產時避免'},
+   {k:'高齡',x:'NSAID 短期最低劑量；opioid 低劑量起始並監測呼吸'},
+   {k:'兒童',x:'<16 歲依兒童流程與體重給藥；codeine 禁用'},
+   {k:'重大創傷',x:'IV morphine 第一線；尚無 IV 考慮 IN ketamine；禁用 nitrous oxide（意識改變、頭部外傷、疑氣胸）'}]},
+  {t:'病因導向',s:'同樣分數，不同首選',l:[
+   {k:'腎絞痛',x:'無禁忌時 NSAID 優於 opioid'},
+   {k:'骨折',x:'固定；可用 opioid；考慮超音波導引神經阻斷（如 fascia iliaca）'},
+   {k:'腰背痛、牙痛、頭痛、非骨折肌肉骨骼痛',x:'Opioid 不作首選，但重度疼痛不可不處理'},
+   {k:'神經病變性',x:'可考慮 lidocaine 貼片，門診調藥'}]},
+  {t:'複評與升降階',s:'每次給藥都要回頭看',l:[
+   {k:'時間',x:'重度約 15 分鐘、中度 15–30 分鐘、輕度 30–60 分鐘；PO／IM 約 30 分鐘'},
+   {k:'有效',x:'改善 ≥30% 具臨床意義；仍屬中度以上則確認功能目標'},
+   {k:'不足',x:'改善 <30%：加量、換類別或換途徑，並重查病因'},
+   {k:'加劇',x:'先重評併發症（腔室症候群、缺血、內出血），再升階'},
+   {k:'避免',x:'Codeine、tramadol、oxycodone；兩種 NSAID 或兩種 IV opioid 併用；非必要 IM'},
+   {k:'出院',x:'Opioid 最多 2–3 天，事先討論停藥計畫'}]}
+ ]
+};
+/*MAP-END*/
+
 const $ = id => document.getElementById(id);
 const FLAGS = ['unstable','redflag','majortrauma','respRisk','aki','dialysis','liver','pregnant','bleed','heart','dehydrated','nsaidAllergy','nsaid','opioid','allergy'];
 let last = '', generated = false, R = null;
@@ -676,6 +760,32 @@ $('quizBox').addEventListener('click', e => {
  Q.done = true; drawQuiz(); $('quizResult').scrollIntoView({behavior:'smooth', block:'start'}); $('quizResult').focus({preventScroll:true});
 });
 startQuiz('all');
+// ---- Mind map ----
+function mapBranch(b, side, i){
+ const leaves = b.l.map(x => '<li>' + (x.k ? '<b>' + esc(x.k) + '</b>　' : '') + esc(x.x) + (x.tw ? ' <span class="mm-tw">台灣仿單</span>' : '') + '</li>').join('');
+ return '<div class="mm-branch ' + side + '"><button type="button" class="mm-head" aria-expanded="true" aria-controls="mm-' + side + i + '"><span class="mm-t">' + (i + 1) + '. ' + esc(b.t) + '</span><span class="mm-s">' + esc(b.s) + '</span></button><ul class="mm-leaves" id="mm-' + side + i + '">' + leaves + '</ul></div>';
+}
+function drawMapLinks(){
+ const w = $('mmWrap'), svg = $('mmLinks');
+ if (getComputedStyle(svg).display === 'none') return;
+ const W = w.getBoundingClientRect(), C = $('mmCenter').getBoundingClientRect();
+ svg.setAttribute('viewBox', '0 0 ' + W.width + ' ' + W.height);
+ svg.innerHTML = [...w.querySelectorAll('.mm-branch')].map(b => {
+  const dx = b.classList.contains('dx'), r = b.querySelector('.mm-head').getBoundingClientRect();
+  const x1 = (dx ? C.left : C.right) - W.left, y1 = C.top + C.height / 2 - W.top, x2 = (dx ? r.right : r.left) - W.left, y2 = r.top + r.height / 2 - W.top, mx = (x1 + x2) / 2;
+  return '<path class="' + (dx ? 'dx' : 'tx') + '" d="M' + x1 + ' ' + y1 + ' C' + mx + ' ' + y1 + ' ' + mx + ' ' + y2 + ' ' + x2 + ' ' + y2 + '"/>';
+ }).join('');
+}
+function setBranch(head, open){ head.setAttribute('aria-expanded', open); $(head.getAttribute('aria-controls')).hidden = !open; }
+$('mmDx').innerHTML = '<h3 class="mm-col dx">診斷與評估</h3>' + PAIN_MAP.dx.map((b, i) => mapBranch(b, 'dx', i)).join('');
+$('mmTx').innerHTML = '<h3 class="mm-col tx">治療</h3>' + PAIN_MAP.tx.map((b, i) => mapBranch(b, 'tx', i)).join('');
+const mmHeads = () => document.querySelectorAll('#mmWrap .mm-head');
+mmHeads().forEach(h => setBranch(h, false));
+$('mmWrap').addEventListener('click', e => { const h = e.target.closest('.mm-head'); if (h){ setBranch(h, h.getAttribute('aria-expanded') !== 'true'); drawMapLinks(); } });
+$('mmOpen').addEventListener('click', () => { mmHeads().forEach(h => setBranch(h, true)); drawMapLinks(); });
+$('mmClose').addEventListener('click', () => { mmHeads().forEach(h => setBranch(h, false)); drawMapLinks(); });
+if (window.ResizeObserver) new ResizeObserver(drawMapLinks).observe($('mmWrap')); else addEventListener('resize', drawMapLinks);
+drawMapLinks();
 $('copy').addEventListener('click', async () => {
  if (!last){ alert('請先產生治療建議'); return; }
  const t = last + (srcLines().length ? '\n【評估工具】' + srcLines().join('；') : '') + '\n【複評】' + $('followup').textContent + '\n【處置備註】' + ($('notes').value || '無');

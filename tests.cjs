@@ -203,5 +203,52 @@ const KEY = {
 t('every question has an engine check', () => assert.deepEqual(Object.keys(KEY).sort(), QUIZ.map(x => x.id).sort()));
 Object.keys(KEY).forEach(id => t('answer ' + id + ' agrees with the engine', KEY[id]));
 
+console.log('Mind map');
+const mm = html.match(/\/\*MAP-START\*\/([\s\S]*?)\/\*MAP-END\*\//);
+const MAP = new Function(mm[1] + ';return PAIN_MAP;')();
+const leaf = (side, title, k) => { const b = MAP[side].find(x => x.t === title); assert.ok(b, title); const l = b.l.find(x => x.k === k); assert.ok(l, k); return l.x; };
+t('5 diagnosis + 6 treatment branches, each with a summary and leaves', () => {
+  assert.equal(MAP.dx.length, 5); assert.equal(MAP.tx.length, 6);
+  [...MAP.dx, ...MAP.tx].forEach(b => { assert.ok(b.t && b.s, b.t); assert.ok(b.l.length >= 2, b.t); });
+});
+t('severity bands match the engine', () => {
+  assert.equal(leaf('dx', '評估疼痛強度', '輕度'), 'NRS 1–3'); assert.equal(leaf('dx', '評估疼痛強度', '中度'), 'NRS 4–6'); assert.equal(leaf('dx', '評估疼痛強度', '重度'), 'NRS 7–10');
+  assert.deepEqual([1, 3, 4, 6, 7, 10].map(P.sevOf), ['mild', 'mild', 'moderate', 'moderate', 'severe', 'severe']);
+});
+t('scale cut-offs match the engine', () => {
+  assert.ok(/>4/.test(leaf('dx', '無法自述時選量表', 'CRIES'))); assert.equal(sc('CRIES', { c: 1, r: 1, i: 1, e: 1, s: 1 }).pain, true); assert.equal(sc('CRIES', { c: 1, r: 1, i: 1, e: 1, s: 0 }).pain, false);
+  assert.ok(/>2/.test(leaf('dx', '無法自述時選量表', 'CPOT'))); assert.ok(/>5/.test(leaf('dx', '無法自述時選量表', 'BPS／BPS-NI')));
+});
+t('adult doses match the engine dose rows', () => {
+  const d = ev({ nrs: 8, weight: 70 }).doses, g = n => d.find(x => x.drug.includes(n));
+  assert.ok(/0\.1 mg\/kg.*0\.7 mg\/kg/.test(leaf('tx', '成人起始劑量', 'Ketamine'))); assert.ok(/IV 0\.1 mg\/kg/.test(g('Ketamine').dose) && /IN 0\.7 mg\/kg/.test(g('Ketamine').dose));
+  assert.ok(/50 μg.*200 μg/.test(leaf('tx', '成人起始劑量', 'Fentanyl'))); assert.ok(/50 μg/.test(g('Fentanyl').dose) && /200 μg/.test(g('Fentanyl').note));
+  assert.ok(leaf('tx', '成人起始劑量', 'Morphine IV').includes('2.5–15 mg')); assert.ok(g('Morphine').dose.includes('2.5–15 mg'));
+  assert.ok(/≤4 g/.test(leaf('tx', '成人起始劑量', 'Paracetamol'))); assert.equal(ev({ weight: 70 }).para.maxG, 4);
+  const low = ev({ weight: 40 }); assert.ok(/15 mg\/kg/.test(low.para.dose) && /12\.5 mg\/kg/.test(low.para.dose)); assert.equal(low.para.maxG, 3);
+});
+t('population rules match the engine', () => {
+  const dia = ev({ nrs: 9, flags: { dialysis: true } }); assert.ok(/NSAIDs、morphine、codeine/.test(leaf('tx', '特殊族群調整', '腎'))); assert.equal(dia.nsaid, 'avoid'); assert.equal(dia.morphineAvoid, true);
+  assert.ok(/≤2 g/.test(leaf('tx', '特殊族群調整', '肝'))); assert.equal(ev({ flags: { liver: true } }).para.maxG, 2);
+  assert.ok(/≤3 g/.test(leaf('tx', '特殊族群調整', '脫水'))); assert.equal(ev({ flags: { dehydrated: true } }).para.maxG, 3); assert.equal(ev({ flags: { dehydrated: true } }).nsaid, 'avoid');
+  const preg = ev({ nrs: 8, flags: { pregnant: true } }); assert.ok(/避免 ketamine/.test(leaf('tx', '特殊族群調整', '妊娠'))); assert.equal(preg.ketamineAvoid, true);
+  assert.ok(/nitrous oxide/.test(leaf('tx', '特殊族群調整', '重大創傷'))); assert.ok(/IV morphine 為第一線/.test(all(ev({ nrs: 8, flags: { majortrauma: true } }))));
+});
+t('Taiwan-label leaves are tagged, and only those', () => {
+  const tw = [...MAP.dx, ...MAP.tx].flatMap(b => b.l).filter(x => x.tw).map(x => x.k);
+  assert.deepEqual(tw, ['<50 kg', '腎（paracetamol）', '肝（IV）']);
+});
+t('reassessment rules match the engine', () => {
+  assert.ok(/30–60/.test(ev({ nrs: 2 }).reassess[0]) && /15–30/.test(ev({ nrs: 5 }).reassess[0]) && /約 15 分鐘/.test(ev({ nrs: 8 }).reassess[0]));
+  assert.ok(/≥30%/.test(leaf('tx', '複評與升降階', '有效'))); assert.equal(P.followup(10, 7, 'iv').status, 'partial'); assert.equal(P.followup(10, 8, 'iv').status, 'notRelieved');
+  assert.ok(/腔室症候群/.test(leaf('tx', '複評與升降階', '加劇'))); assert.equal(P.followup(5, 7, 'iv').status, 'worse');
+  assert.ok(/2–3 天/.test(leaf('tx', '複評與升降階', '出院')));
+});
+t('cause rules match the engine', () => {
+  assert.ok(/NSAID 優於 opioid/.test(leaf('tx', '病因導向', '腎絞痛')) && /NSAID 優於 opioid/.test(all(ev({ cause: 'renal' }))));
+  assert.ok(/fascia iliaca/.test(leaf('tx', '病因導向', '骨折')) && /fascia iliaca/.test(all(ev({ cause: 'fracture' }))));
+  ['back', 'dental', 'headache', 'muscle'].forEach(c => assert.ok(/opioid 不作/.test(all(ev({ cause: c }))), c));
+});
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
