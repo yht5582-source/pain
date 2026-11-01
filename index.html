@@ -20,18 +20,29 @@ dialog#scaleDlg{overflow:auto;border:0;border-radius:14px;padding:0;width:min(86
 #scaleSource:empty{display:none}
 @media(max-width:550px){.faces{grid-template-columns:repeat(3,1fr)}.dlg-body{padding:12px}.sc-opts{grid-template-columns:1fr}}
 #printSummary{display:none}
-@media print{dialog,header,button,.input-area,#demoCases,.noprint{display:none!important}#printSummary{display:block}body{background:white}section{box-shadow:none;break-inside:avoid}}
+.jump{margin:0 0 14px;font-size:14px}.jump a{color:#1d5f9d;font-weight:700}
+.qz-sets{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}.qz-sets button{margin:0}
+.qz-q{border:1px solid #dce5ee;border-radius:10px;padding:12px 14px;margin:0 0 12px;min-width:0}.qz-q legend{padding:0 6px;font-size:12px;color:#64778d}.qz-q .stem{margin:0 0 10px;font-weight:600;line-height:1.6}
+.qz-lv{display:inline-block;border-radius:99px;padding:1px 8px;font-size:12px;font-weight:700;background:#dceaf5;color:#173e60;margin-right:6px}.qz-lv.adv{background:#fde0db;color:#8a2111}
+.qz-opt{display:flex;gap:8px;align-items:flex-start;border:1px solid #c9d8e6;border-radius:8px;padding:9px 10px;margin-bottom:6px;font-size:14px;line-height:1.5;cursor:pointer;background:#f6f9fc}.qz-opt input{width:auto;flex:none;margin:3px 0 0}.qz-opt b{flex:none}
+.qz-opt.right{background:#d9f2e3;border-color:#3d9a62}.qz-opt.wrong{background:#fde0db;border-color:#c4462f}
+.qz-why{margin:10px 0 0;font-size:14px}.qz-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.qz-bar button{margin:0}.qz-score{font-size:26px;font-weight:800;margin:4px 0}
+@media print{dialog,header,button,.input-area,#demoCases,#quiz,.jump,.noprint{display:none!important}#printSummary{display:block}body{background:white}section{box-shadow:none;break-inside:avoid}}
 @media(max-width:550px){main{padding:12px}section{padding:15px}header{padding:22px 16px}header h1{font-size:22px}}
 </style></head><body>
-<header><h1>急診急性疼痛｜互動治療決策導航</h1><p>EUSEM 2025 × ACEP × NICE｜評估 → 安全篩選 → 多模式止痛 → 複評｜v1.2</p></header>
+<header><h1>急診急性疼痛｜互動治療決策導航</h1><p>EUSEM 2025 × ACEP × NICE｜評估 → 安全篩選 → 多模式止痛 → 複評｜v1.3</p></header>
 <main>
 <div class="note warn"><strong>臨床決策輔助原型，不可直接作為醫囑。</strong> 建議需由醫師評估病因、生命徵象、過敏及院內藥品仿單。兒童、懷孕、重大創傷、程序性鎮靜應遵循專用流程。本網站不儲存或傳送個人資料，請勿輸入病人姓名或身分證字號。</div>
-<section class="input-area" id="demoCases"><span class="step">示範教學</span><h2>三組臨床示範病例｜一鍵帶入</h2>
+<p class="jump">快速前往：<a href="#demoCases">示範病例（6 例）</a> · <a href="#quiz">測驗（基礎 10＋高階 10）</a></p>
+<section class="input-area" id="demoCases"><span class="step">示範教學</span><h2>六組臨床示範病例｜一鍵帶入</h2>
 <p class="muted">所有資料均為虛構教學情境。點選案例後自動填入資料並生成分析，請觀察哪些藥物選項被限制、為什麼限制，以及複評時間。</p>
 <div class="grid">
 <div class="panel" style="margin:0"><h3>案例 A｜一般成人骨折</h3><p>35 歲，70 kg，eGFR 105，橈骨遠端骨折，NRS 8，生命徵象穩定。</p><button type="button" data-case="fracture">載入骨折案例</button></div>
 <div class="panel" style="margin:0"><h3>案例 B｜透析重度疼痛</h3><p>68 歲，60 kg，規律 HD，eGFR 5（僅為示範值），跌倒後髖部骨折，NRS 9。</p><button type="button" data-case="dialysis">載入透析案例</button></div>
 <div class="panel" style="margin:0"><h3>案例 C｜高齡出血風險</h3><p>83 歲，48 kg，eGFR 38，急性膝關節扭傷，NRS 6，近期上消化道出血。</p><button type="button" data-case="elder">載入高齡案例</button></div>
+<div class="panel" style="margin:0"><h3>案例 D｜妊娠腎絞痛</h3><p>31 歲，懷孕 28 週，64 kg，eGFR 118，右腰絞痛放射至鼠蹊，NRS 8，無發燒。</p><button type="button" data-case="pregnant">載入妊娠案例</button></div>
+<div class="panel" style="margin:0"><h3>案例 E｜失代償肝硬化肋骨骨折</h3><p>58 歲，58 kg，eGFR 48，腹水與輕度肝性腦病變，跌倒後肋骨骨折，NRS 7。</p><button type="button" data-case="liver">載入肝硬化案例</button></div>
+<div class="panel" style="margin:0"><h3>案例 F｜進階失智無法自述</h3><p>86 歲，44 kg，eGFR 42，進食差，安養機構跌倒致肱骨近端骨折，PAINAD 7/10。</p><button type="button" data-case="dementia">載入失智案例</button></div>
 </div><div id="demoExplanation" class="note">請選擇一組案例。讀取後，下方欄位可自行修改以測試不同情境。</div></section>
 <div class="input-area">
 <section><span class="step">STEP 1</span><h2>危急病因及即時安全檢查</h2>
@@ -93,9 +104,13 @@ dialog#scaleDlg{overflow:auto;border:0;border-radius:14px;padding:0;width:min(86
 <label class="field">處置備註<textarea id="notes" rows="2" placeholder="藥物、劑量、時間、生命徵象、是否不良反應"></textarea></label></div>
 <button type="button" id="copy">複製治療摘要</button><button type="button" class="secondary" id="print">列印</button>
 <div id="followup" class="note">請先產生建議並輸入複評分數。</div></section>
+<section id="quiz"><span class="step">自我評量</span><h2>急性疼痛測驗｜20 題</h2>
+<p class="muted">基礎題考核心規則；高階題為多重限制、資料互相衝突或計算陷阱，須整合多個條件。依本頁採用的指引與仿單命題，交卷後顯示解析；作答不會儲存。每次開始選項順序隨機。</p>
+<div class="qz-sets" role="group" aria-label="題組"><button type="button" data-qset="all">全部 20 題</button><button type="button" data-qset="basic">基礎 10 題</button><button type="button" data-qset="adv">高階 10 題</button></div>
+<div id="quizBox"></div></section>
 <section><h2>文獻與使用原則</h2><p>本系統使用 EUSEM 2025 的初始評估、疼痛分層（Figure 8.2）、成人／兒童治療選項（Figure 8.3a/b）、特殊族群（第 7 章：腎病、肝病、妊娠、高齡）與複評原則（Figure 8.1）；重大創傷參考 NICE NG39 1.7.4–1.7.6，opioid 使用原則參考 ACEP 2020。無法自述者的評量表：FLACC（Merkel 1997）、FACES（FPS-R，Hicks 2001；Wong-Baker 1988）、CRIES（Krechel 1995）、PAINAD（Warden 2003）、CPOT（Gélinas 2006）、BPS／BPS-NI（Payen 2001；Chanques 2009），項目為中文意譯、臉譜為本站自繪示意圖。藥物具各國核准差異（例如 methoxyflurane、metamizole、SL sufentanil 在台灣未必可取得），選用須符合當地仿單與院內規範。</p>
 <p><a href="https://eusem.org/images/251210_EUSEM_European_Pain_Initiative_Guidelines_Updated_Oct_2025.pdf" target="_blank" rel="noopener">EUSEM 2025 原始手冊</a> · <a href="https://www.acep.org/siteassets/new-pdfs/clinical-policies/opioids-2020.pdf" target="_blank" rel="noopener">ACEP Opioid Policy</a> · <a href="https://www.nice.org.uk/guidance/ng39/chapter/Recommendations" target="_blank" rel="noopener">NICE NG39</a> · <a href="https://www.kidney.org/kidney-topics/pain-medicines-and-kidney-disease" target="_blank" rel="noopener">NKF Kidney Safety</a> · <a href="https://iasp-pain.org/resources/faces-pain-scale-revised/" target="_blank" rel="noopener">FPS-R（IASP）</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/30113379/" target="_blank" rel="noopener">SCCM PADIS 2018（CPOT／BPS）</a> · <a href="https://yht5582-source.github.io/Migraine--Headache/" target="_blank" rel="noopener">偏頭痛／頭痛專頁</a></p></section>
-<footer>Version 1.2 | 2026-10-14 | Clinical decision support only. 成人劑量僅列 EUSEM 2025 第 8 章原文起始劑量供核對；體重 <50 kg 的 paracetamol 依台灣仿單；未包含處方自動簽署、兒童體重劑量或完整藥物交互作用資料庫。</footer>
+<footer>Version 1.3 | 2026-11-01 | Clinical decision support only. 成人劑量僅列 EUSEM 2025 第 8 章原文起始劑量供核對；體重 <50 kg 的 paracetamol 依台灣仿單；未包含處方自動簽署、兒童體重劑量或完整藥物交互作用資料庫。</footer>
 </main>
 <dialog id="scaleDlg" aria-labelledby="scaleTitle">
 <div class="dlg-head"><div><h2 id="scaleTitle"></h2><p id="scaleWho"></p></div><button type="button" id="scaleClose" aria-label="關閉評量表">✕ 關閉</button></div>
@@ -200,7 +215,7 @@ var PAIN = (function () {
 
     // ---- cause-specific ----
     if (cause === 'fracture') causeNotes.push('骨折／創傷：及早固定、冰敷、抬高；合適時考慮超音波導引區域神經阻斷（髖部骨折如 fascia iliaca block）。骨折屬於可使用 opioid 的情境。');
-    if (cause === 'renal') causeNotes.push('腎絞痛：無禁忌時 NSAID 優於 opioid（較少需要救援止痛、較少嘔吐；EUSEM 引 Pathan 2018 統合分析）；NSAID 禁忌時改用 IV paracetamol、ketamine 或 opioid。合併發燒或無尿需立即泌尿科處置。');
+    if (cause === 'renal') causeNotes.push('腎絞痛：無禁忌時 NSAID 優於 opioid（較少需要救援止痛、較少嘔吐；EUSEM 引 Pathan 2018 統合分析）；NSAID 禁忌時改用 IV paracetamol' + (ketamineAvoid ? ' 或 opioid（本例 ketamine 亦須避免）' : '、ketamine 或 opioid') + '。合併發燒或無尿需立即泌尿科處置。');
     if (cause === 'abdominal') causeNotes.push('腹痛原因待查：給予止痛（包含 opioid）不會增加診斷錯誤，不應為等待外科評估而延遲止痛（EUSEM 第 1 章）。');
     if (cause === 'headache') causeNotes.push('頭痛：先排除 secondary headache red flags（突發雷擊樣、神經學缺損、發燒頸僵硬、外傷、懷孕、免疫低下、≥50 歲新發）；opioid 不作一般首選。偏頭痛可用專屬急性治療（見頭痛專頁）。');
     if (cause === 'back') causeNotes.push('急性腰背痛：先排除馬尾症候群、感染、腫瘤、主動脈病變；opioid 不作首選，鼓勵維持活動。');
@@ -423,23 +438,65 @@ var PAIN = (function () {
 if (typeof module !== 'undefined') module.exports = PAIN;
 /*ENGINE-END*/
 
+/*QUIZ-START*/
+// ans = index into opts as written here; options are shuffled at display. tests.cjs checks every answer against the engine.
+const PAIN_QUIZ = [
+ {id:'b1',level:'basic',topic:'疼痛分級',stem:'依 EUSEM 2025 Figure 8.2，成人疼痛 NRS 分級何者正確？',opts:['輕度 <4、中度 4–6、重度 7–10','輕度 ≤4、中度 5–7、重度 8–10','輕度 1–2、中度 3–5、重度 6–10','依病因固定：骨折與腎絞痛一律視為重度'],ans:0,why:'輕度 <4、中度 4–6、重度 7–10。分數取自病人自述，疾病名稱不對應固定分數。',src:'EUSEM 2025 Figure 8.2'},
+ {id:'b2',level:'basic',topic:'疼痛評估',stem:'腳踝骨折病人躺著滑手機、表情平靜、心率 72，但自述疼痛 8/10。應如何記錄與處理？',opts:['依觀察改記 3 分，暫不給止痛','生命徵象正常，表示實際疼痛不超過輕度','記 NRS 8，再討論其止痛意願與功能目標','請病人重新評分，直到分數與表情及生命徵象相符為止'],ans:2,why:'NRS 以病人自述為準，不能單靠心率或表情指定分數；處置再加入病因、功能目標與禁忌症考量。',src:'EUSEM 2025 第 3 章'},
+ {id:'b3',level:'basic',topic:'複評時機',stem:'重度疼痛病人接受 IV fentanyl 後，第一次複評大約在何時？',opts:['約 5 分鐘','約 15 分鐘','約 30 分鐘','約 60 分鐘'],ans:1,why:'重度疼痛給藥後約 15 分鐘複評；依途徑則 IV／IN／吸入／SL 約 15 分鐘，PO／IM 約 30 分鐘。',src:'EUSEM 2025 Figure 8.1'},
+ {id:'b4',level:'basic',topic:'出院處方',stem:'骨折病人急診曾用 opioid，評估後可出院。關於出院止痛，何者正確？',opts:['給 tramadol 兩週，因其成癮性與呼吸抑制都較 morphine 低','給 codeine 複方一個月，依需要服用','一律不可開 opioid，即使非 opioid 無效','若需 opioid，最多 2–3 天並事先討論停藥計畫'],ans:3,why:'Opioid 出院處方最多 2–3 天並先討論停藥；EUSEM 2025 不建議 codeine、tramadol、oxycodone。',src:'EUSEM 2025 第 8 章'},
+ {id:'b5',level:'basic',topic:'腎功能',stem:'規律血液透析病人重度疼痛需要 opioid，下列何者較適合？',opts:['Morphine，透析可完全移除代謝物','Codeine，屬弱效 opioid 較安全','由有經驗者滴定短效 fentanyl 並監測呼吸','Ketorolac，透析病人已無殘餘腎功能需要保護，可優先使用'],ans:2,why:'AKI／eGFR <30／透析應避免 NSAIDs、morphine、codeine（活性代謝物蓄積）；opioid 優先短效 fentanyl。',src:'EUSEM 2025 第 7 章'},
+ {id:'b6',level:'basic',topic:'升階原則',stem:'病人到院前已服 ibuprofen，現在 NRS 5。升階時何者正確？',opts:['加 IV ketorolac，IV 途徑較快','加 oral diclofenac，改用不同 NSAID 即可','將 ibuprofen 加倍，同藥加量應優先於加入其他類別藥物','加不同機轉藥物，如 paracetamol，不加第二種 NSAID'],ans:3,why:'勿疊加第二種 NSAID；升階是加入不同機轉或不同途徑，而不是同類疊加。',src:'EUSEM 2025 Figure 8.3a'},
+ {id:'b7',level:'basic',topic:'腎絞痛',stem:'40 歲腎絞痛，腎功能正常、無 NSAID 禁忌。首選止痛類別為？',opts:['NSAID','Opioid','Benzodiazepine','抗組織胺'],ans:0,why:'無禁忌時 NSAID 優於 opioid：較少需要救援止痛、較少嘔吐。',src:'EUSEM 2025 引 Pathan 2018'},
+ {id:'b8',level:'basic',topic:'評量表選擇',stem:'插管中、無法溝通的 ICU 成人，較適合哪一項疼痛評量？',opts:['FACES','CRIES','CPOT','NRS'],ans:2,why:'CPOT、BPS 用於無法自述的重症成人。FACES 需自行指認，CRIES 用於新生兒／嬰兒，NRS 需自述。',src:'SCCM PADIS 2018；Gélinas 2006'},
+ {id:'b9',level:'basic',topic:'腹痛',stem:'急性腹痛原因未明、NRS 8，外科尚未到場。何者正確？',opts:['等外科檢查後再止痛，以免遮蔽症狀','可給止痛（必要時 opioid），不會增加診斷錯誤','只能用 paracetamol，opioid 一律禁用','先 IM 給藥，起效較慢不會遮蔽腹部檢查，外科到場後再改 IV'],ans:1,why:'給止痛（包含 opioid）不會增加診斷錯誤，不應為等待外科評估而延遲。',src:'EUSEM 2025 第 1 章'},
+ {id:'b10',level:'basic',topic:'Paracetamol',stem:'70 kg 成人、無肝病與脫水，paracetamol 每日上限為？',opts:['2 g','3 g','4 g','6 g'],ans:2,why:'一般成人 1 g／次、間隔 ≥4 小時，每日 ≤4 g；總量須加總所有途徑及複方。',src:'EUSEM 2025 第 8 章'},
+
+ {id:'a1',level:'adv',topic:'多重上限',stem:'48 kg，脫水，合併失代償肝硬化。依本頁規則，paracetamol 的上限與途徑為？',opts:['每日 ≤3.6 g（75 mg/kg），PO 或 IV','每日 ≤3 g（脫水上限），PO 或 IV','每日 ≤2 g，僅 PO（IV 禁用）','每日 ≤4 g，僅 PO'],ans:2,why:'三個上限並存時取最低：體重 3.6 g、脫水 3 g、肝病 2 g → 2 g；台灣仿單另禁用 IV。',src:'台灣仿單；歐洲 IV 仿單；EUSEM 第 7 章'},
+ {id:'a2',level:'adv',topic:'來源衝突',stem:'失代償肝硬化、NPO、NRS 6，同事說「EUSEM 允許 paracetamol 每日 ≤2 g，所以打 IV 1 g」。最佳回應是？',opts:['同意，指引優先於仿單','EUSEM 講的是口服，台灣 IV 產品禁用；改其他類別並會同肝膽科','改 IV ketorolac，肝硬化無須顧慮 NSAID','改 IV morphine 10 mg，肝病不需調整 opioid'],ans:1,why:'EUSEM 的 ≤2 g 是口服；台灣仿單 IV paracetamol 禁用於重度肝功能不全。NSAID 避免，opioid 需降低劑量與頻率，ketamine 考慮減量。',src:'台灣仿單；EUSEM 第 7 章'},
+ {id:'a3',level:'adv',topic:'路徑衝突',stem:'懷孕 28 週腎絞痛，NRS 8，腎功能正常。腎絞痛首選與重度路徑都不適用時，應選？',opts:['IV ketorolac，因腎絞痛 NSAID 優於 opioid','先 IV ketamine 再滴定 opioid，以減少呼吸抑制','妊娠全程禁用 opioid，只能給 paracetamol 並觀察疼痛是否自行緩解','IV paracetamol，加監測下短期滴定 opioid，會同產科'],ans:3,why:'≥20 週避免 NSAIDs，妊娠避免 ketamine，兩個常規首選都被排除；短期 opioid 可在監測下使用（生產時避免）。',src:'EUSEM 2025 第 7、8 章'},
+ {id:'a4',level:'adv',topic:'劑量計算',stem:'62 kg 骨折病人尚無 IV，要給鼻內 ketamine。起始量與追加規則為？',opts:['約 6 mg；追加間隔 ≥10 分鐘','約 19 mg；追加間隔 ≥5 分鐘','約 43 mg；追加 0.3–0.5 mg/kg，間隔 ≥15 分鐘','62 mg；不可追加'],ans:2,why:'IN 0.7 mg/kg × 62 = 43.4 mg，追加 0.3–0.5 mg/kg、間隔 ≥15 分鐘。約 6 mg 是 IV 0.1 mg/kg 的劑量，IV 重複間隔才是 ≥10 分鐘。',src:'EUSEM 2025 第 8 章'},
+ {id:'a5',level:'adv',topic:'複評判讀',stem:'初始 NRS 9，IV 給藥後複評 6。如何判讀？',opts:['改善 33%，已達臨床意義但仍屬中度：確認功能目標，未達才升階','改善 3 分，不足 50%，視為治療失敗','已達臨床意義改善，可直接規劃出院','未降到 0–3 分，一律立即加 opioid'],ans:0,why:'(9−6)/9 = 33%，已達 ≥30% 的臨床意義門檻，但 6 分仍屬中度，下一步依功能目標決定，下次複評約 15 分鐘後。',src:'EUSEM 2025 第 3 章；Figure 8.1'},
+ {id:'a6',level:'adv',topic:'疼痛加劇',stem:'脛骨骨折打石膏，止痛後 NRS 由 6 升到 8，被動伸展腳趾時劇痛。下一步優先為？',opts:['依原則再追加 IV morphine，30 分鐘後複評','換 ketamine 後繼續觀察','止痛後反而加劇多為焦慮所致，先給 benzodiazepine 再複評疼痛','立即重評病因（如腔室症候群），同時繼續止痛'],ans:3,why:'疼痛加劇要先重新評估病因與併發症（腔室症候群、缺血、內出血），再升階；止痛與病因處置同步進行。',src:'EUSEM 2025 Figure 8.1'},
+ {id:'a7',level:'adv',topic:'數值陷阱',stem:'58 歲，48 小時內肌酸酐由 0.9 升至 1.8 mg/dL，報告 eGFR 45，NRS 8。下列處理何者最恰當？',opts:['eGFR ≥30，可用 ketorolac 短期止痛','eGFR 30–59，morphine 無須顧慮','依 AKI 處理：避免 NSAID 與 morphine，優先 fentanyl','先算 Cockcroft-Gault，只要 ≥30 就可依穩定慢性腎病的規則處理'],ans:2,why:'肌酸酐快速變化時 eGFR 不準；本例依 AKI 處理，NSAID 與 morphine 都改為避免，與穩定 eGFR 45 的結論不同。',src:'EUSEM 2025 第 7 章'},
+ {id:'a8',level:'adv',topic:'重大創傷',stem:'28 歲機車事故多處骨折，NRS 9，GCS 13、疑氣胸，IV 尚未建立。最適合的止痛處置為？',opts:['先給 nitrous oxide 橋接，等 IV 建立','等 IV 建立後才止痛，以免掩蓋傷勢','IM morphine，因尚無 IV 途徑，且 IM 是重大創傷的標準替代途徑','考慮 IN ketamine，建立 IV 後以 IV morphine 滴定'],ans:3,why:'意識改變、頭部外傷或疑氣胸時禁用 nitrous oxide。NICE NG39：IV morphine 第一線，尚無 IV 時考慮 IN ketamine；IM 只在其他途徑皆不可行時使用。',src:'NICE NG39 1.7.4–1.7.6；EUSEM 第 8 章'},
+ {id:'a9',level:'adv',topic:'量表切點',stem:'插管病人翻身時 CPOT：臉部 1、身體 1、呼吸器 1、肌張力 0。如何解讀？',opts:['3/8 換算約 NRS 4，依中度路徑並以 NRS 複評','總分 3 >2 可能有疼痛：處理後以 CPOT 複評','總分未達 5，疼痛可能性低，繼續觀察','應再評 BPS，兩者相加後才能判讀'],ans:1,why:'CPOT 切點 >2 分，只判斷是否可能有疼痛，不換算為 0–10 強度；處置後須用同一量表複評。BPS 切點是 >5。',src:'Gélinas 2006；SCCM PADIS 2018'},
+ {id:'a10',level:'adv',topic:'綜合判斷',stem:'45 歲急性腰背痛 NRS 8，已服 ibuprofen，有睡眠呼吸中止，無神經學缺損。何者最恰當？',opts:['加 IV ketorolac，疼痛重時可併用 NSAID','重度疼痛應直接 IV morphine 為首選','確認無 red flag；用 paracetamol、低劑量 ketamine，不足才短期 opioid 並監測呼吸','腰背痛屬非 opioid 情境，不需任何藥物，鼓勵維持活動後即可回家'],ans:2,why:'腰背痛 opioid 不作首選，先排除馬尾症候群等 red flag；已用 NSAID 不可再加第二種；呼吸風險者 opioid 需低劑量滴定與監測。重度疼痛仍要處理，不能不給藥。',src:'EUSEM 2025 第 7、8 章；ACEP 2020'}
+];
+/*QUIZ-END*/
+
 const $ = id => document.getElementById(id);
 const FLAGS = ['unstable','redflag','majortrauma','respRisk','aki','dialysis','liver','pregnant','bleed','heart','dehydrated','nsaidAllergy','nsaid','opioid','allergy'];
 let last = '', generated = false, R = null;
+/*CASES-START*/
 const cases = {
  fracture:{age:35,weight:70,egfr:105,nrs:8,cause:'fracture',goal:'能配合檢查及治療',flags:[],repeat:4,route:'iv',notes:'示範：固定骨折、評估神經血管狀態；若有移位需復位，視情況採區域阻斷及滴定短效止痛。'},
  dialysis:{age:68,weight:60,egfr:5,nrs:9,cause:'fracture',goal:'能配合檢查及治療',flags:['dialysis'],repeat:5,route:'iv',notes:'示範：髖部骨折需影像與骨科評估；可考慮髂筋膜阻斷；慎選短效 opioid，監測呼吸與鎮靜。透析患者 eGFR 不用於決定透析需求。'},
- elder:{age:83,weight:48,egfr:38,nrs:6,cause:'muscle',goal:'能活動或行走',flags:['bleed'],repeat:3,route:'po',notes:'示範：需排除隱匿骨折、跌倒原因及目前是否持續出血；避免常規全身性 NSAID，檢查低體重 paracetamol 每日上限。'}
+ elder:{age:83,weight:48,egfr:38,nrs:6,cause:'muscle',goal:'能活動或行走',flags:['bleed'],repeat:3,route:'po',notes:'示範：需排除隱匿骨折、跌倒原因及目前是否持續出血；避免常規全身性 NSAID，檢查低體重 paracetamol 每日上限。'},
+ pregnant:{age:31,weight:64,egfr:118,nrs:8,cause:'renal',goal:'疼痛明顯下降',flags:['pregnant'],repeat:4,route:'iv',notes:'示範：確認胎心音與宮縮並會同產科；影像以超音波優先；排除感染性阻塞（發燒、無尿需立即泌尿科處置）。IV paracetamol 後以小劑量滴定 opioid。'},
+ liver:{age:58,weight:58,egfr:48,nrs:7,cause:'fracture',goal:'能休息及睡眠',flags:['liver','respRisk'],repeat:6,route:'iv',notes:'示範：改善不足，先排除氣胸、血胸與肝脾損傷再升階；神經阻斷前核對 INR 與血小板；肝硬化的 eGFR 常高估腎功能。'},
+ dementia:{age:86,weight:44,egfr:42,nrs:7,cause:'fracture',goal:'能配合檢查及治療',flags:['dehydrated'],repeat:3,route:'iv',scale:{id:'PAINAD',ans:{breath:1,vocal:2,face:2,body:1,consol:1},rep:{breath:0,vocal:1,face:1,body:1,consol:0}},notes:'示範：非語言病人同樣以 PAINAD 複評；找跌倒原因；固定患肢、補充水分；opioid 由低劑量開始並觀察呼吸與譫妄。'}
 };
 const explain = {
  fracture:'教學觀察：NRS 8 屬重度，結果會列出「先 ketamine 再滴定 opioid」、IV morphine 首選與神經阻斷；腎功能及出血風險未見預設禁忌，但仍需核對過敏與用藥。',
  dialysis:'教學觀察：透析使 NSAIDs、morphine、codeine 被列入避免，opioid 改以 fentanyl 為主並優先考慮髂筋膜阻斷。透析患者不能憑 eGFR 5 判斷透析充分性。',
- elder:'教學觀察：NRS 6 屬中度；近期上消化道出血使全身性 NSAIDs 被列入避免。48 kg 使 paracetamol 改依體重計算（15 mg/kg ≈ 720 mg q6h），每日上限 75 mg/kg ≈ 3.6 g，並須加總複方。'
+ elder:'教學觀察：NRS 6 屬中度；近期上消化道出血使全身性 NSAIDs 被列入避免。48 kg 使 paracetamol 改依體重計算（15 mg/kg ≈ 720 mg q6h），每日上限 75 mg/kg ≈ 3.6 g，並須加總複方。',
+ pregnant:'教學觀察：腎絞痛原本首選 NSAID，但懷孕 28 週（≥20 週）列為避免；ketamine 亦須避免，所以重度疼痛路徑不再出現「先 ketamine」。留下 IV paracetamol 與監測下短期 opioid，並會同產科。複評 4 分改善 50%，但仍屬中度：要回頭確認功能目標，不能只看百分比。',
+ liver:'教學觀察：這例要看到兩份來源不一致——台灣仿單 IV paracetamol 禁用於重度肝功能不全，EUSEM 第 7 章認為口服每日 ≤2 g 仍可用；頁面兩者並列，不代為裁決。NSAID 避免；opioid 需降低劑量與頻率（再加呼吸風險）；ketamine 考慮減量。複評 6 分僅改善 14%：先找胸部併發症再升階。',
+ dementia:'教學觀察：無法自述時用 PAINAD（2+2+1+1+1=7）帶入分級，並以同一量表複評（3 分，改善 57%）。44 kg 依體重為每日 3.3 g，但脫水上限 3 g 更嚴，取低者 3 g；脫水也使全身性 NSAIDs 列為避免。eGFR 42 不自動排除 morphine，但高齡要由 2.5 mg 起。'
 };
+/*CASES-END*/
 function loadCase(key){
  const c = cases[key]; if(!c) return;
  FLAGS.forEach(id => $(id).checked = c.flags.includes(id));
  ['age','weight','egfr','nrs','cause','goal','repeat','route','notes'].forEach(id => $(id).value = c[id]);
+ initSrc = repSrc = null; Object.keys(obsRec).forEach(k => delete obsRec[k]);
+ if (c.scale) {
+  const lab = r => ({ id: r.id, label: scaleLabel(r), text: r.text });
+  scaleAns[c.scale.id] = Object.assign({}, c.scale.ans);
+  initSrc = lab(PAIN.scoreScale(c.scale.id, c.scale.ans)); repSrc = lab(PAIN.scoreScale(c.scale.id, c.scale.rep));
+ }
+ showSources();
  $('demoExplanation').textContent = explain[key];
  render(); $('result').scrollIntoView({behavior:'smooth', block:'start'});
 }
@@ -577,6 +634,48 @@ $('scaleRecord').addEventListener('click', () => {
 });
 $('nrs').addEventListener('change', () => { if (initSrc){ initSrc = null; showSources(); if (generated) render(); } });
 $('repeat').addEventListener('change', () => { if (repSrc){ repSrc = null; showSources(); } });
+// ---- Quiz ----
+let Q = null;
+const QLV = { basic: '基礎', adv: '高階' };
+function shuffledIdx(n){ const a = Array.from({length:n}, (_, i) => i); for (let i = n - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function startQuiz(set){
+ const items = PAIN_QUIZ.filter(q => set === 'all' || q.level === set);
+ Q = { set, items, order: items.map(q => shuffledIdx(q.opts.length)), a: items.map(() => null), done: false };
+ document.querySelectorAll('[data-qset]').forEach(b => { const on = b.dataset.qset === set; b.className = on ? '' : 'secondary'; b.setAttribute('aria-pressed', on); });
+ drawQuiz();
+}
+function quizResultHTML(){
+ const right = Q.items.filter((q, i) => Q.a[i] === q.ans).length;
+ const by = ['basic','adv'].filter(l => Q.items.some(q => q.level === l)).map(l => { const idx = Q.items.map((q, i) => i).filter(i => Q.items[i].level === l); return QLV[l] + ' ' + idx.filter(i => Q.a[i] === Q.items[i].ans).length + '/' + idx.length; });
+ return '<div class="note" id="quizResult" tabindex="-1" style="margin-top:0"><strong>測驗結果</strong><div class="qz-score">' + right + ' / ' + Q.items.length + '</div><div>' + by.join('　') + '</div></div>';
+}
+function drawQuiz(){
+ const body = Q.items.map((q, i) => {
+  const opts = Q.order[i].map((o, k) => {
+   const cls = !Q.done ? '' : o === q.ans ? ' right' : o === Q.a[i] ? ' wrong' : '';
+   return '<label class="qz-opt' + cls + '"><input type="radio" name="qz' + i + '" data-q="' + i + '" value="' + o + '"' + (Q.a[i] === o ? ' checked' : '') + (Q.done ? ' disabled' : '') + '><b>' + 'ABCD'[k] + '.</b><span>' + esc(q.opts[o]) + (Q.done && o === q.ans ? '（正確答案）' : '') + (Q.done && o === Q.a[i] && o !== q.ans ? '（你的答案）' : '') + '</span></label>';
+  }).join('');
+  const why = Q.done ? '<div class="note qz-why ' + (Q.a[i] === q.ans ? 'ok' : 'warn') + '"><strong>' + (Q.a[i] === q.ans ? '答對。' : '答錯。') + '</strong>' + esc(q.why) + '<br><small>出處：' + esc(q.src) + '</small></div>' : '';
+  return '<fieldset class="qz-q" id="qzq' + i + '"><legend><span class="qz-lv ' + q.level + '">' + QLV[q.level] + '</span>第 ' + (i + 1) + ' 題｜' + esc(q.topic) + '</legend><p class="stem">' + esc(q.stem) + '</p>' + opts + why + '</fieldset>';
+ }).join('');
+ const bar = Q.done ? '<div class="qz-bar"><button type="button" data-qact="again">重新作答</button></div>' : '<div class="qz-bar"><button type="button" data-qact="submit">交卷</button><span class="muted" id="quizProg" aria-live="polite"></span></div>';
+ $('quizBox').innerHTML = (Q.done ? quizResultHTML() : '') + body + bar;
+ quizProgress();
+}
+function quizProgress(){ const el = $('quizProg'); if (el) el.textContent = '已答 ' + Q.a.filter(x => x !== null).length + ' / ' + Q.items.length; }
+document.querySelectorAll('[data-qset]').forEach(b => b.addEventListener('click', () => {
+ if (Q && !Q.done && Q.a.some(x => x !== null) && b.dataset.qset !== Q.set && !confirm('切換題組會清除目前作答，確定嗎？')) return;
+ startQuiz(b.dataset.qset);
+}));
+$('quizBox').addEventListener('change', e => { const r = e.target; if (r.dataset.q === undefined) return; Q.a[Number(r.dataset.q)] = Number(r.value); quizProgress(); });
+$('quizBox').addEventListener('click', e => {
+ const b = e.target.closest('[data-qact]'); if (!b) return;
+ if (b.dataset.qact === 'again'){ startQuiz(Q.set); $('quiz').scrollIntoView({behavior:'smooth', block:'start'}); return; }
+ const miss = Q.a.indexOf(null);
+ if (miss >= 0){ $('quizProg').textContent = '尚有 ' + Q.a.filter(x => x === null).length + ' 題未作答（第 ' + (miss + 1) + ' 題起）'; $('qzq' + miss).scrollIntoView({behavior:'smooth', block:'center'}); $('qzq' + miss).querySelector('input').focus({preventScroll:true}); return; }
+ Q.done = true; drawQuiz(); $('quizResult').scrollIntoView({behavior:'smooth', block:'start'}); $('quizResult').focus({preventScroll:true});
+});
+startQuiz('all');
 $('copy').addEventListener('click', async () => {
  if (!last){ alert('請先產生治療建議'); return; }
  const t = last + (srcLines().length ? '\n【評估工具】' + srcLines().join('；') : '') + '\n【複評】' + $('followup').textContent + '\n【處置備註】' + ($('notes').value || '無');

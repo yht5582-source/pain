@@ -137,5 +137,71 @@ t('BPS 3–12, 0 is not a valid option, threshold >5', () => {
 });
 t('every option score within scale range', () => Object.keys(P.SCALES).forEach(id => (P.SCALES[id].items || []).forEach(it => it.opts.forEach(o => assert.ok(o[0] >= 0 && o[0] <= 4, id)))));
 
+console.log('Demo cases D–F (run the page data through the engine)');
+const cm = html.match(/\/\*CASES-START\*\/([\s\S]*?)\/\*CASES-END\*\//);
+const { cases, explain } = new Function(cm[1] + ';return { cases, explain };')();
+const evCase = k => { const c = cases[k], flags = {}; c.flags.forEach(x => flags[x] = true); return P.evaluate({ age: c.age, weight: c.weight, egfr: c.egfr, nrs: c.nrs, cause: c.cause, goal: c.goal, flags }); };
+t('six cases, each with an explanation and a page button', () => {
+  assert.deepEqual(Object.keys(cases), ['fracture', 'dialysis', 'elder', 'pregnant', 'liver', 'dementia']);
+  Object.keys(cases).forEach(k => { assert.ok(explain[k], k); assert.ok(html.includes('data-case="' + k + '"'), k); });
+});
+t('Case D pregnancy renal colic: NSAID + ketamine avoided, no ketamine advice left', () => {
+  const r = evCase('pregnant'), txt = all(r);
+  assert.equal(r.sev, 'severe'); assert.equal(r.nsaid, 'avoid'); assert.equal(r.ketamineAvoid, true); assert.equal(r.morphineAvoid, false);
+  assert.ok(!/先給 ketamine/.test(txt)); assert.ok(!/、ketamine 或 opioid/.test(txt)); assert.ok(/本例 ketamine 亦須避免/.test(txt));
+  const f = P.followup(8, cases.pregnant.repeat, cases.pregnant.route); assert.equal(f.pct, 50); assert.equal(f.status, 'partial');
+});
+t('renal colic without pregnancy still lists ketamine as an NSAID alternative', () => assert.ok(/、ketamine 或 opioid/.test(all(ev({ cause: 'renal' })))));
+t('Case E cirrhosis: IV contraindicated, 2 g, source conflict shown, 14% not relieved', () => {
+  const r = evCase('liver');
+  assert.equal(r.para.ivContra, true); assert.equal(r.para.maxG, 2); assert.equal(r.nsaid, 'avoid'); assert.ok(/兩者不一致/.test(all(r))); assert.ok(/ketamine 考慮減量/.test(all(r)));
+  const f = P.followup(7, cases.liver.repeat, cases.liver.route); assert.equal(f.pct, 14); assert.equal(f.status, 'notRelieved');
+});
+t('Case F dementia: PAINAD 7 → 3 (57%), 44 kg 3.3 g capped to 3 g by dehydration', () => {
+  const c = cases.dementia, a = P.scoreScale('PAINAD', c.scale.ans), b = P.scoreScale('PAINAD', c.scale.rep);
+  assert.equal(a.total, c.nrs); assert.equal(b.total, c.repeat);
+  const r = evCase('dementia'); assert.equal(r.para.maxG, 3); assert.equal(ev({ weight: 44 }).para.maxG, 3.3); assert.equal(r.nsaid, 'avoid'); assert.equal(r.morphineAvoid, false);
+  assert.ok(r.doses.some(d => /由 2.5 mg 起/.test(d.note)));
+  assert.equal(P.followup(7, 3, 'iv').pct, 57); assert.equal(P.followup(7, 3, 'iv').status, 'relieved');
+});
+
+console.log('Quiz bank');
+const qm = html.match(/\/\*QUIZ-START\*\/([\s\S]*?)\/\*QUIZ-END\*\//);
+const QUIZ = new Function(qm[1] + ';return PAIN_QUIZ;')();
+const q = id => { const it = QUIZ.find(x => x.id === id); return it.opts[it.ans]; };
+t('20 questions = 10 basic + 10 advanced, 4 options, valid unique ids', () => {
+  assert.equal(QUIZ.length, 20); assert.equal(new Set(QUIZ.map(x => x.id)).size, 20);
+  assert.equal(QUIZ.filter(x => x.level === 'basic').length, 10); assert.equal(QUIZ.filter(x => x.level === 'adv').length, 10);
+  QUIZ.forEach(x => { assert.equal(x.opts.length, 4, x.id); assert.ok(x.ans >= 0 && x.ans < 4, x.id); assert.equal(new Set(x.opts).size, 4, x.id); assert.ok(x.why && x.src, x.id); });
+});
+t('correct answer is not a giveaway by being the longest option', () => {
+  const longest = QUIZ.filter(x => x.opts[x.ans].length === Math.max(...x.opts.map(o => o.length))).length;
+  assert.ok(longest <= 12, 'correct option is the longest in ' + longest + '/20');
+});
+const KEY = {
+  b1: () => { assert.ok(/<4.*4–6.*7–10/.test(q('b1'))); assert.deepEqual([3, 4, 6, 7].map(P.sevOf), ['mild', 'moderate', 'moderate', 'severe']); },
+  b2: () => { assert.ok(/NRS 8/.test(q('b2'))); assert.ok(html.includes('以病人自述為準')); },
+  b3: () => { assert.ok(/15/.test(q('b3'))); assert.ok(/15 分鐘第一次複評/.test(ev({ nrs: 8 }).reassess[0])); },
+  b4: () => { assert.ok(/2–3 天/.test(q('b4'))); assert.ok(/最多 2–3 天/.test(all(ev({ nrs: 8, cause: 'fracture' })))); assert.ok(/Codeine、tramadol/.test(all(ev({ nrs: 8 })))); },
+  b5: () => { assert.ok(/fentanyl/.test(q('b5'))); const r = ev({ nrs: 9, flags: { dialysis: true } }); assert.equal(r.morphineAvoid, true); assert.equal(r.nsaid, 'avoid'); assert.ok(/fentanyl 為主要 opioid/.test(all(r))); },
+  b6: () => { assert.ok(/不加第二種 NSAID/.test(q('b6'))); const r = ev({ nrs: 5, flags: { nsaid: true } }); assert.equal(r.nsaid, 'avoid'); assert.ok(!/IV ketorolac（/.test(all(r))); },
+  b7: () => { assert.equal(q('b7'), 'NSAID'); assert.ok(/NSAID 優於 opioid/.test(all(ev({ age: 40, cause: 'renal' })))); },
+  b8: () => { assert.equal(q('b8'), 'CPOT'); assert.ok(/重症/.test(P.SCALES.CPOT.who)); assert.ok(/新生兒/.test(P.SCALES.CRIES.who)); assert.equal(P.SCALES.FACES.kind, 'self'); },
+  b9: () => { assert.ok(/不會增加診斷錯誤/.test(q('b9'))); assert.ok(/不會增加診斷錯誤/.test(all(ev({ nrs: 8, cause: 'abdominal' })))); },
+  b10: () => { assert.equal(q('b10'), '4 g'); assert.equal(ev({ weight: 70 }).para.maxG, 4); },
+  a1: () => { assert.ok(/≤2 g.*IV 禁用/.test(q('a1'))); const r = ev({ weight: 48, flags: { dehydrated: true, liver: true } }); assert.equal(r.para.maxG, 2); assert.equal(r.para.ivContra, true); assert.equal(ev({ weight: 48 }).para.maxG, 3.6); assert.equal(ev({ weight: 48, flags: { dehydrated: true } }).para.maxG, 3); },
+  a2: () => { assert.ok(/口服.*禁用/.test(q('a2'))); const r = ev({ nrs: 6, flags: { liver: true } }), txt = all(r); assert.equal(r.para.ivContra, true); assert.equal(r.nsaid, 'avoid'); assert.ok(/所有 opioid 需降低劑量/.test(txt) && /ketamine 考慮減量/.test(txt) && /兩者不一致/.test(txt)); },
+  a3: () => { assert.ok(/IV paracetamol.*opioid/.test(q('a3'))); const r = ev({ age: 31, nrs: 8, cause: 'renal', flags: { pregnant: true } }); assert.equal(r.nsaid, 'avoid'); assert.equal(r.ketamineAvoid, true); assert.ok(/短期 opioid 可於監測下使用/.test(all(r))); assert.ok(/IV paracetamol/.test(all(r))); },
+  a4: () => { assert.ok(/43 mg.*0\.3–0\.5 mg\/kg.*≥15/.test(q('a4'))); const k = ev({ nrs: 8, weight: 62 }).doses.find(d => d.drug === 'Ketamine'); assert.ok(/43\.4 mg/.test(k.dose) && /6\.2 mg/.test(k.dose)); assert.ok(/IN 追加 0\.3–0\.5 mg\/kg 間隔 ≥15/.test(k.note) && /IV 重複間隔 ≥10/.test(k.note)); },
+  a5: () => { assert.ok(/33%/.test(q('a5'))); const f = P.followup(9, 6, 'iv'); assert.equal(f.pct, 33); assert.equal(f.status, 'partial'); assert.equal(f.next, 15); assert.ok(/功能目標/.test(f.action)); },
+  a6: () => { assert.ok(/腔室症候群/.test(q('a6'))); const f = P.followup(6, 8, 'iv'); assert.equal(f.status, 'worse'); assert.ok(/腔室症候群/.test(f.action)); },
+  a7: () => { assert.ok(/AKI/.test(q('a7'))); const r = ev({ age: 58, egfr: 45, nrs: 8, flags: { aki: true } }); assert.equal(r.nsaid, 'avoid'); assert.equal(r.morphineAvoid, true); assert.ok(/fentanyl 為主要 opioid/.test(all(r))); assert.equal(ev({ age: 58, egfr: 45, nrs: 8 }).morphineAvoid, false); },
+  a8: () => { assert.ok(/IN ketamine/.test(q('a8'))); const txt = all(ev({ age: 28, nrs: 9, cause: 'fracture', flags: { majortrauma: true } })); assert.ok(/IV morphine 為第一線/.test(txt) && /尚無 IV 時考慮 IN ketamine/.test(txt) && /禁用 nitrous oxide/.test(txt) && /IM 途徑僅在/.test(txt)); },
+  a9: () => { assert.ok(/總分 3 >2/.test(q('a9'))); const r = sc('CPOT', { face: 1, body: 1, vent: 1, tension: 0 }, 'vent'); assert.equal(r.total, 3); assert.equal(r.pain, true); assert.equal(r.mapNRS, false); assert.equal(sc('BPS', { face: 2, limb: 2, vent: 1 }, 'vent').pain, false); },
+  a10: () => { assert.ok(/red flag.*ketamine.*opioid/.test(q('a10'))); const r = ev({ age: 45, nrs: 8, cause: 'back', flags: { nsaid: true, respRisk: true } }), txt = all(r); assert.equal(r.nsaid, 'avoid'); assert.ok(/此類疼痛 opioid 不作首選/.test(txt) && /馬尾/.test(txt) && /呼吸監測/.test(txt)); assert.ok(r.doses.some(d => d.drug === 'Ketamine')); }
+};
+t('every question has an engine check', () => assert.deepEqual(Object.keys(KEY).sort(), QUIZ.map(x => x.id).sort()));
+Object.keys(KEY).forEach(id => t('answer ' + id + ' agrees with the engine', KEY[id]));
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
